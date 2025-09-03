@@ -368,7 +368,8 @@ const Reporting = () => {
                         </Button>
                       </div>
                     </CardContent>
-                  </Card>
+                   </Card>
+                </div>
               </div>
             </div>
           </main>

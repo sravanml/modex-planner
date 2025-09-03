@@ -356,8 +356,9 @@ const Prediction = () => {
                         </div>
                       </div>
                     </CardContent>
-                  </Card>
-                </div>
+                   </Card>
+                 </div>
+              </div>
             </div>
           </main>
         </div>
