@@ -125,7 +125,7 @@ const FinalizePlan = () => {
   return (
     <>
       <div className="mb-8">
-        <h3 className="text-xl font-semibold mb-2">Finalize Plan</h3>
+        <h3 className="text-sm font-bold mb-2">Finalize Plan</h3>
         <p className="text-muted-foreground">
           Review, edit, and finalize your supply chain plan based on model predictions
         </p>
@@ -136,7 +136,7 @@ const FinalizePlan = () => {
                 <div className="lg:col-span-1 space-y-6">
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center space-x-2">
+                      <CardTitle className="flex items-center space-x-2 text-sm font-bold">
                         <Target className="h-5 w-5" />
                         <span>Plan Selection</span>
                       </CardTitle>
@@ -177,7 +177,7 @@ const FinalizePlan = () => {
 
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center space-x-2">
+                      <CardTitle className="flex items-center space-x-2 text-sm font-bold">
                         <MessageSquare className="h-5 w-5" />
                         <span>AI Summary</span>
                       </CardTitle>
@@ -194,7 +194,7 @@ const FinalizePlan = () => {
                 <div className="lg:col-span-3">
                   <Card>
                     <CardHeader>
-                      <CardTitle>Supply Chain Plan</CardTitle>
+                      <CardTitle className="text-sm font-bold">Supply Chain Plan</CardTitle>
                       <CardDescription>
                         Review and edit the model-generated plan. Click edit to modify values.
                       </CardDescription>
@@ -318,7 +318,7 @@ const FinalizePlan = () => {
                   {/* Finalized Plans History */}
                   <Card className="mt-6">
                     <CardHeader>
-                      <CardTitle>Finalized Plans</CardTitle>
+                      <CardTitle className="text-sm font-bold">Finalized Plans</CardTitle>
                       <CardDescription>History of all finalized supply chain plans</CardDescription>
                     </CardHeader>
                     <CardContent>

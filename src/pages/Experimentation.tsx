@@ -142,7 +142,7 @@ const Experimentation = () => {
   return (
     <>
       <div className="mb-8">
-        <h3 className="text-xl font-semibold mb-2">AI Experimentation Lab</h3>
+        <h3 className="text-sm font-bold mb-2">AI Experimentation Lab</h3>
         <p className="text-muted-foreground">
           Engage with ModEx AI to explore scenarios, ask questions, and get intelligent insights
         </p>
@@ -153,7 +153,7 @@ const Experimentation = () => {
         <div className="lg:col-span-1">
           <Card className="h-[700px]">
                     <CardHeader>
-                      <CardTitle className="flex items-center space-x-2 text-lg">
+                      <CardTitle className="flex items-center space-x-2 text-sm font-bold">
                         <History className="h-5 w-5" />
                         <span>Chat History</span>
                       </CardTitle>
@@ -187,7 +187,7 @@ const Experimentation = () => {
         <div className="lg:col-span-3">
           <Card className="h-[700px] flex flex-col">
                     <CardHeader className="border-b bg-gradient-hero text-white">
-                      <CardTitle className="flex items-center space-x-2">
+                      <CardTitle className="flex items-center space-x-2 text-sm font-bold">
                         <Bot className="h-6 w-6" />
                         <span>ModEx AI - Advanced Analytics</span>
                       </CardTitle>

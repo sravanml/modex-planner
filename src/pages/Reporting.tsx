@@ -60,7 +60,7 @@ const Reporting = () => {
   return (
     <>
       <div className="mb-8">
-        <h3 className="text-xl font-semibold mb-2">Reporting & Analytics</h3>
+        <h3 className="text-sm font-bold mb-2">Reporting & Analytics</h3>
         <p className="text-muted-foreground">
           Generate comprehensive reports and analytics for your supply chain data
         </p>
@@ -71,7 +71,7 @@ const Reporting = () => {
         <div className="lg:col-span-1">
           <Card>
             <CardHeader>
-                      <CardTitle className="text-lg">Filters</CardTitle>
+                      <CardTitle className="text-sm font-bold">Filters</CardTitle>
                       <CardDescription>Customize your report parameters</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
@@ -158,7 +158,7 @@ const Reporting = () => {
 
           <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center space-x-2">
+                      <CardTitle className="flex items-center space-x-2 text-sm font-bold">
                         <MessageSquare className="h-5 w-5" />
                         <span>AI Insights</span>
                       </CardTitle>
@@ -236,7 +236,7 @@ const Reporting = () => {
           {/* Demand Forecast Trend */}
           <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center space-x-2">
+                      <CardTitle className="flex items-center space-x-2 text-sm font-bold">
                         <BarChart3 className="h-5 w-5" />
                         <span>Demand Forecast vs Actual</span>
                       </CardTitle>
@@ -258,7 +258,7 @@ const Reporting = () => {
           {/* Forecast Accuracy Comparison */}
           <Card>
                     <CardHeader>
-                      <CardTitle>Forecast vs Actual Comparison</CardTitle>
+                      <CardTitle className="text-sm font-bold">Forecast vs Actual Comparison</CardTitle>
                       <CardDescription>Detailed accuracy metrics by region and time period</CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -305,7 +305,7 @@ const Reporting = () => {
           {/* Insights & Recommendations */}
           <Card>
                     <CardHeader>
-                      <CardTitle>Key Insights</CardTitle>
+                      <CardTitle className="text-sm font-bold">Key Insights</CardTitle>
                       <CardDescription>Highlights and lowlights from the selected run ID</CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -329,7 +329,7 @@ const Reporting = () => {
           {/* Data Export */}
           <Card>
                     <CardHeader>
-                      <CardTitle>Export Data</CardTitle>
+                      <CardTitle className="text-sm font-bold">Export Data</CardTitle>
                       <CardDescription>Download comprehensive reports and model predictions</CardDescription>
                     </CardHeader>
                     <CardContent>

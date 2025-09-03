@@ -157,7 +157,7 @@ const Prediction = () => {
   return (
     <>
       <div className="mb-8">
-        <h3 className="text-xl font-semibold mb-2">Prediction & Output Analysis</h3>
+        <h3 className="text-sm font-bold mb-2">Prediction & Output Analysis</h3>
         <p className="text-muted-foreground">
           Generate ML-powered predictions and analyze results with ModEx AI
         </p>
@@ -168,7 +168,7 @@ const Prediction = () => {
         <div className="lg:col-span-1 space-y-6">
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center space-x-2">
+                      <CardTitle className="flex items-center space-x-2 text-sm font-bold">
                         <BarChart3 className="h-5 w-5" />
                         <span>Model Configuration</span>
                       </CardTitle>
@@ -238,7 +238,7 @@ const Prediction = () => {
                   {/* Model Runs */}
                   <Card>
                     <CardHeader>
-                      <CardTitle>Model Runs</CardTitle>
+                      <CardTitle className="text-sm font-bold">Model Runs</CardTitle>
                       <CardDescription>Track prediction generation progress</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
@@ -272,7 +272,7 @@ const Prediction = () => {
         <div className="lg:col-span-2">
                   <Card className="h-[600px] flex flex-col">
                     <CardHeader className="border-b bg-gradient-primary text-white rounded-t-lg">
-                      <CardTitle className="flex items-center space-x-2">
+                      <CardTitle className="flex items-center space-x-2 text-sm font-bold">
                         <MessageSquare className="h-5 w-5" />
                         <span>ModEx AI - Your Supply Chain Assistant</span>
                       </CardTitle>
