@@ -303,14 +303,14 @@ const Reporting = () => {
                     <History className="h-4 w-4" />
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[80vh]">
+                <DialogContent className="max-w-md max-h-[400px] overflow-hidden">
                   <DialogHeader>
                     <DialogTitle className="flex items-center space-x-2">
                       <History className="h-5 w-5" />
                       <span>Chat History</span>
                     </DialogTitle>
                   </DialogHeader>
-                  <div className="overflow-y-auto max-h-[60vh] space-y-3 pr-2">
+                  <div className="overflow-y-auto flex-1 space-y-3 pr-2 max-h-[300px]">
                     {chatSessions.map((session) => (
                       <div 
                         key={session.id} 
