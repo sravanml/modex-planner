@@ -66,116 +66,111 @@ const Reporting = () => {
         </p>
       </div>
 
+      {/* Filters as Horizontal Banner */}
+      <Card className="mb-6">
+        <CardContent className="pt-6">
+          <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="from-date">From Date</Label>
+              <Input
+                id="from-date"
+                type="date"
+                value={fromDate}
+                onChange={(e) => setFromDate(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="to-date">To Date</Label>
+              <Input
+                id="to-date"
+                type="date"
+                value={toDate}
+                onChange={(e) => setToDate(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Region</Label>
+              <Select value={region} onValueChange={setRegion}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select region" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="north-america">North America</SelectItem>
+                  <SelectItem value="europe">Europe</SelectItem>
+                  <SelectItem value="asia-pacific">Asia Pacific</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Run ID</Label>
+              <Select value={runId} onValueChange={setRunId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select run ID" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="run_001">run_001</SelectItem>
+                  <SelectItem value="run_002">run_002</SelectItem>
+                  <SelectItem value="run_003">run_003</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Plan ID</Label>
+              <Select value={planId} onValueChange={setPlanId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select plan ID" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="plan_001">plan_001</SelectItem>
+                  <SelectItem value="plan_002">plan_002</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Product Category</Label>
+              <Select value={productCategory} onValueChange={setProductCategory}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="electronics">Electronics</SelectItem>
+                  <SelectItem value="automotive">Automotive</SelectItem>
+                  <SelectItem value="healthcare">Healthcare</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Filters Panel */}
+        {/* AI Insights Panel */}
         <div className="lg:col-span-1">
           <Card>
             <CardHeader>
-                      <CardTitle className="text-sm font-bold">Filters</CardTitle>
-                      <CardDescription>Customize your report parameters</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="from-date">From Date</Label>
-                        <Input
-                          id="from-date"
-                          type="date"
-                          value={fromDate}
-                          onChange={(e) => setFromDate(e.target.value)}
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="to-date">To Date</Label>
-                        <Input
-                          id="to-date"
-                          type="date"
-                          value={toDate}
-                          onChange={(e) => setToDate(e.target.value)}
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label>Region</Label>
-                        <Select value={region} onValueChange={setRegion}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select region" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="north-america">North America</SelectItem>
-                            <SelectItem value="europe">Europe</SelectItem>
-                            <SelectItem value="asia-pacific">Asia Pacific</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label>Run ID</Label>
-                        <Select value={runId} onValueChange={setRunId}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select run ID" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="run_001">run_001</SelectItem>
-                            <SelectItem value="run_002">run_002</SelectItem>
-                            <SelectItem value="run_003">run_003</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label>Plan ID</Label>
-                        <Select value={planId} onValueChange={setPlanId}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select plan ID" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="plan_001">plan_001</SelectItem>
-                            <SelectItem value="plan_002">plan_002</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label>Product Category</Label>
-                        <Select value={productCategory} onValueChange={setProductCategory}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select category" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="electronics">Electronics</SelectItem>
-                            <SelectItem value="automotive">Automotive</SelectItem>
-                            <SelectItem value="healthcare">Healthcare</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <Button className="w-full bg-gradient-primary hover:opacity-90">
-                        Generate Report
-                      </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center space-x-2 text-sm font-bold">
-                        <MessageSquare className="h-5 w-5" />
-                        <span>AI Insights</span>
-                      </CardTitle>
-                      <CardDescription>
-                        Ask questions about your data
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <Textarea
-                        placeholder="Ask about predictions, final plans, or actuals..."
-                        value={aiQuery}
-                        onChange={(e) => setAiQuery(e.target.value)}
-                        className="min-h-[100px]"
-                      />
-                      <Button onClick={handleAiQuery} className="w-full">
-                        Ask AI
-                      </Button>
+              <CardTitle className="flex items-center space-x-2 text-sm font-bold">
+                <MessageSquare className="h-5 w-5" />
+                <span>AI Insights</span>
+              </CardTitle>
+              <CardDescription>
+                Ask questions about your data
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Textarea
+                placeholder="Ask about predictions, final plans, or actuals..."
+                value={aiQuery}
+                onChange={(e) => setAiQuery(e.target.value)}
+                className="min-h-[100px]"
+              />
+              <Button onClick={handleAiQuery} className="w-full">
+                Ask AI
+              </Button>
             </CardContent>
           </Card>
         </div>
