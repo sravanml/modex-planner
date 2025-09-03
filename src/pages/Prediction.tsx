@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { 
   Play, 
   Calendar, 
@@ -17,7 +18,9 @@ import {
   CheckCircle,
   XCircle,
   Clock,
-  Send
+  Send,
+  History,
+  X
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -61,6 +64,7 @@ const Prediction = () => {
       message: 'Hello! I\'m ModEx AI. I can help you understand your supply chain predictions and answer questions about model results. How can I assist you today?'
     }
   ]);
+  const [showChatHistory, setShowChatHistory] = useState(false);
 
   const { toast } = useToast();
 
@@ -270,9 +274,47 @@ const Prediction = () => {
         <div className="lg:col-span-2">
           <Card className="h-[500px] flex flex-col">
             <CardHeader className="border-b bg-gradient-primary text-white rounded-t-lg">
-              <CardTitle className="flex items-center space-x-2 text-sm font-bold">
-                <MessageSquare className="h-5 w-5" />
-                <span>ModEx AI - Your Supply Chain Assistant</span>
+              <CardTitle className="flex items-center justify-between text-sm font-bold">
+                <div className="flex items-center space-x-2">
+                  <MessageSquare className="h-5 w-5" />
+                  <span>ModEx AI - Your Supply Chain Assistant</span>
+                </div>
+                <Dialog open={showChatHistory} onOpenChange={setShowChatHistory}>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
+                      <History className="h-4 w-4" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[80vh]">
+                    <DialogHeader>
+                      <DialogTitle className="flex items-center space-x-2">
+                        <History className="h-5 w-5" />
+                        <span>Chat History</span>
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="overflow-y-auto max-h-[60vh] space-y-4 pr-2">
+                      {chatHistory.map((chat, index) => (
+                        <div key={index} className={`flex ${chat.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                          <div className={`max-w-[80%] rounded-lg px-4 py-2 ${
+                            chat.type === 'user' 
+                              ? 'bg-primary text-primary-foreground' 
+                              : 'bg-muted text-muted-foreground'
+                          }`}>
+                            <div className="flex items-center space-x-2 mb-1">
+                              <span className="text-xs font-medium">
+                                {chat.type === 'user' ? 'You' : 'ModEx AI'}
+                              </span>
+                              <span className="text-xs opacity-70">
+                                {new Date().toLocaleTimeString()}
+                              </span>
+                            </div>
+                            <p className="text-sm">{chat.message}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </CardTitle>
               <CardDescription className="text-white/80">
                 Ask questions about your predictions and get intelligent insights
