@@ -4,8 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Navbar from "@/components/Layout/Navbar";
-import { ModuleSelector } from "@/components/Layout/ModuleSelector";
 import { 
   MessageSquare, 
   Send,
@@ -37,7 +35,6 @@ interface ChatSession {
 }
 
 const Experimentation = () => {
-  const [selectedModule, setSelectedModule] = useState("planning-forecasting");
   const [currentMessage, setCurrentMessage] = useState("");
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
     {
@@ -70,16 +67,6 @@ const Experimentation = () => {
   ]);
 
   const { toast } = useToast();
-
-  const handleModuleSelect = (moduleId: string, subModule?: string) => {
-    setSelectedModule(moduleId);
-    if (subModule) {
-      toast({
-        title: "Module Selected",
-        description: `Switched to ${subModule}`,
-      });
-    }
-  };
 
   const handleSendMessage = () => {
     if (!currentMessage.trim()) return;
@@ -153,37 +140,18 @@ const Experimentation = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Module Selection Section */}
-        <ModuleSelector 
-          selectedModule={selectedModule}
-          onModuleSelect={handleModuleSelect}
-          currentStep="experimentation"
-        />
+    <>
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold mb-2">AI Experimentation Lab</h3>
+        <p className="text-muted-foreground">
+          Engage with ModEx AI to explore scenarios, ask questions, and get intelligent insights
+        </p>
+      </div>
 
-        {/* Main Content */}
-        <div className="mt-8">
-              <div className="mb-8">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="p-3 bg-gradient-primary rounded-lg">
-                    <Sparkles className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h1 className="text-3xl font-bold">AI Experimentation Lab</h1>
-                    <p className="text-muted-foreground">
-                      Advanced AI-powered supply chain analysis and prediction workspace
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                {/* Chat History Sidebar */}
-                <div className="lg:col-span-1">
-                  <Card className="h-[700px]">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Chat History Sidebar */}
+        <div className="lg:col-span-1">
+          <Card className="h-[700px]">
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-2 text-lg">
                         <History className="h-5 w-5" />
@@ -211,13 +179,13 @@ const Experimentation = () => {
                           </div>
                         ))}
                       </div>
-                    </CardContent>
-                  </Card>
-                </div>
+            </CardContent>
+          </Card>
+        </div>
 
-                {/* Main Chat Interface */}
-                <div className="lg:col-span-3">
-                  <Card className="h-[700px] flex flex-col">
+        {/* Main Chat Interface */}
+        <div className="lg:col-span-3">
+          <Card className="h-[700px] flex flex-col">
                     <CardHeader className="border-b bg-gradient-hero text-white">
                       <CardTitle className="flex items-center space-x-2">
                         <Bot className="h-6 w-6" />
@@ -338,13 +306,11 @@ const Experimentation = () => {
                           Press Enter to send, Shift+Enter for new line
                         </p>
                       </div>
-                    </CardContent>
-                   </Card>
-                </div>
-              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

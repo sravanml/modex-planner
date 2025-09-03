@@ -5,8 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import Navbar from "@/components/Layout/Navbar";
-import { ModuleSelector } from "@/components/Layout/ModuleSelector";
 import { 
   BarChart3, 
   TrendingUp, 
@@ -22,7 +20,6 @@ import {
 } from "lucide-react";
 
 const Reporting = () => {
-  const [selectedModule, setSelectedModule] = useState("planning-forecasting");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [region, setRegion] = useState("");
@@ -60,37 +57,20 @@ const Reporting = () => {
     console.log('AI Query submitted:', aiQuery);
   };
 
-  const handleModuleSelect = (moduleId: string, subModule?: string) => {
-    setSelectedModule(moduleId);
-    console.log(`Module selected: ${moduleId}${subModule ? ` - ${subModule}` : ''}`);
-  };
-
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Module Selection Section */}
-        <ModuleSelector 
-          selectedModule={selectedModule}
-          onModuleSelect={handleModuleSelect}
-          currentStep="reporting"
-        />
+    <>
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold mb-2">Reporting & Analytics</h3>
+        <p className="text-muted-foreground">
+          Generate comprehensive reports and analytics for your supply chain data
+        </p>
+      </div>
 
-        {/* Main Content */}
-        <div className="mt-8">
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold mb-2">Reporting & Insights</h1>
-                <p className="text-muted-foreground">
-                  Comprehensive analytics and insights for your supply chain performance
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                {/* Filters & AI Section */}
-                <div className="lg:col-span-1 space-y-6">
-                  <Card>
-                    <CardHeader>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Filters Panel */}
+        <div className="lg:col-span-1">
+          <Card>
+            <CardHeader>
                       <CardTitle className="text-lg">Filters</CardTitle>
                       <CardDescription>Customize your report parameters</CardDescription>
                     </CardHeader>
@@ -173,10 +153,10 @@ const Reporting = () => {
                       <Button className="w-full bg-gradient-primary hover:opacity-90">
                         Generate Report
                       </Button>
-                    </CardContent>
-                  </Card>
+            </CardContent>
+          </Card>
 
-                  <Card>
+          <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-2">
                         <MessageSquare className="h-5 w-5" />
@@ -196,14 +176,14 @@ const Reporting = () => {
                       <Button onClick={handleAiQuery} className="w-full">
                         Ask AI
                       </Button>
-                    </CardContent>
-                  </Card>
-                </div>
+            </CardContent>
+          </Card>
+        </div>
 
-                {/* Main Content Area */}
-                <div className="lg:col-span-3 space-y-6">
-                  {/* Key Metrics */}
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {/* Reports Display */}
+        <div className="lg:col-span-3 space-y-6">
+          {/* Key Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <Card>
                       <CardContent className="p-6">
                         <div className="flex items-center space-x-2">
@@ -251,10 +231,10 @@ const Reporting = () => {
                         </div>
                       </CardContent>
                     </Card>
-                  </div>
+          </div>
 
-                  {/* Demand Forecast Trend */}
-                  <Card>
+          {/* Demand Forecast Trend */}
+          <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-2">
                         <BarChart3 className="h-5 w-5" />
@@ -273,10 +253,10 @@ const Reporting = () => {
                         </div>
                       </div>
                     </CardContent>
-                  </Card>
+          </Card>
 
-                  {/* Forecast Accuracy Comparison */}
-                  <Card>
+          {/* Forecast Accuracy Comparison */}
+          <Card>
                     <CardHeader>
                       <CardTitle>Forecast vs Actual Comparison</CardTitle>
                       <CardDescription>Detailed accuracy metrics by region and time period</CardDescription>
@@ -320,10 +300,10 @@ const Reporting = () => {
                         </div>
                       </div>
                     </CardContent>
-                  </Card>
+          </Card>
 
-                  {/* Insights & Recommendations */}
-                  <Card>
+          {/* Insights & Recommendations */}
+          <Card>
                     <CardHeader>
                       <CardTitle>Key Insights</CardTitle>
                       <CardDescription>Highlights and lowlights from the selected run ID</CardDescription>
@@ -344,10 +324,10 @@ const Reporting = () => {
                         })}
                       </div>
                     </CardContent>
-                  </Card>
+          </Card>
 
-                  {/* Data Export */}
-                  <Card>
+          {/* Data Export */}
+          <Card>
                     <CardHeader>
                       <CardTitle>Export Data</CardTitle>
                       <CardDescription>Download comprehensive reports and model predictions</CardDescription>
@@ -368,12 +348,10 @@ const Reporting = () => {
                         </Button>
                       </div>
                     </CardContent>
-                   </Card>
-                </div>
-              </div>
+                  </Card>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

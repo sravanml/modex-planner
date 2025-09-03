@@ -6,8 +6,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
-import Navbar from "@/components/Layout/Navbar";
-import { ModuleSelector } from "@/components/Layout/ModuleSelector";
 import { 
   Play, 
   Calendar, 
@@ -33,7 +31,6 @@ interface ModelRun {
 }
 
 const Prediction = () => {
-  const [selectedModule, setSelectedModule] = useState("planning-forecasting");
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
@@ -66,16 +63,6 @@ const Prediction = () => {
   ]);
 
   const { toast } = useToast();
-
-  const handleModuleSelect = (moduleId: string, subModule?: string) => {
-    setSelectedModule(moduleId);
-    if (subModule) {
-      toast({
-        title: "Module Selected",
-        description: `Switched to ${subModule}`,
-      });
-    }
-  };
 
   const handleGeneratePredictions = () => {
     if (!fromDate || !toDate || !region) {
@@ -168,29 +155,17 @@ const Prediction = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Module Selection Section */}
-        <ModuleSelector 
-          selectedModule={selectedModule}
-          onModuleSelect={handleModuleSelect}
-          currentStep="prediction"
-        />
+    <>
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold mb-2">Prediction & Output Analysis</h3>
+        <p className="text-muted-foreground">
+          Generate ML-powered predictions and analyze results with ModEx AI
+        </p>
+      </div>
 
-        {/* Main Content */}
-        <div className="mt-8">
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold mb-2">Prediction & Output Analysis</h1>
-                <p className="text-muted-foreground">
-                  Generate ML-powered predictions and analyze results with ModEx AI
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Upload Section */}
-                <div className="lg:col-span-1 space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Upload Section */}
+        <div className="lg:col-span-1 space-y-6">
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-2">
@@ -290,11 +265,11 @@ const Prediction = () => {
                         </div>
                       ))}
                     </CardContent>
-                  </Card>
-                </div>
+          </Card>
+        </div>
 
-                {/* ModEx AI Chat Interface */}
-                <div className="lg:col-span-2">
+        {/* ModEx AI Chat Interface */}
+        <div className="lg:col-span-2">
                   <Card className="h-[600px] flex flex-col">
                     <CardHeader className="border-b bg-gradient-primary text-white rounded-t-lg">
                       <CardTitle className="flex items-center space-x-2">
@@ -357,11 +332,9 @@ const Prediction = () => {
                       </div>
                     </CardContent>
                    </Card>
-                 </div>
-              </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

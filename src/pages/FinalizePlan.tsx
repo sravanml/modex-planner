@@ -6,8 +6,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import Navbar from "@/components/Layout/Navbar";
-import { ModuleSelector } from "@/components/Layout/ModuleSelector";
 import { 
   CheckCircle, 
   Download, 
@@ -40,7 +38,6 @@ interface FinalizedPlan {
 }
 
 const FinalizePlan = () => {
-  const [selectedModule, setSelectedModule] = useState("planning-forecasting");
   const [selectedRun, setSelectedRun] = useState("run_001");
   const [editingRow, setEditingRow] = useState<number | null>(null);
   const [editReason, setEditReason] = useState("");
@@ -85,16 +82,6 @@ const FinalizePlan = () => {
 
   const { toast } = useToast();
 
-  const handleModuleSelect = (moduleId: string, subModule?: string) => {
-    setSelectedModule(moduleId);
-    if (subModule) {
-      toast({
-        title: "Module Selected",
-        description: `Switched to ${subModule}`,
-      });
-    }
-  };
-
   const handleEdit = (index: number) => {
     setEditingRow(index);
   };
@@ -136,27 +123,15 @@ const FinalizePlan = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Module Selection Section */}
-        <ModuleSelector 
-          selectedModule={selectedModule}
-          onModuleSelect={handleModuleSelect}
-          currentStep="finalizePlan"
-        />
+    <>
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold mb-2">Finalize Plan</h3>
+        <p className="text-muted-foreground">
+          Review, edit, and finalize your supply chain plan based on model predictions
+        </p>
+      </div>
 
-        {/* Main Content */}
-        <div className="mt-8">
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold mb-2">Finalize Plan</h1>
-                <p className="text-muted-foreground">
-                  Review, edit, and finalize your supply chain plan based on model predictions
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 {/* Plan Selection & Summary */}
                 <div className="lg:col-span-1 space-y-6">
                   <Card>
@@ -372,9 +347,7 @@ const FinalizePlan = () => {
                    </Card>
                 </div>
               </div>
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 

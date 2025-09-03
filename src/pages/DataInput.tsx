@@ -3,8 +3,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Navbar from "@/components/Layout/Navbar";
-import { ModuleSelector } from "@/components/Layout/ModuleSelector";
 import { 
   Upload, 
   FileSpreadsheet, 
@@ -27,7 +25,6 @@ interface UploadedFile {
 }
 
 const DataInput = () => {
-  const [selectedModule, setSelectedModule] = useState("planning-forecasting");
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([
     {
       id: '1',
@@ -48,16 +45,6 @@ const DataInput = () => {
   ]);
   
   const { toast } = useToast();
-
-  const handleModuleSelect = (moduleId: string, subModule?: string) => {
-    setSelectedModule(moduleId);
-    if (subModule) {
-      toast({
-        title: "Module Selected",
-        description: `Switched to ${subModule}`,
-      });
-    }
-  };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -115,30 +102,18 @@ const DataInput = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Module Selection Section */}
-        <ModuleSelector 
-          selectedModule={selectedModule}
-          onModuleSelect={handleModuleSelect}
-          currentStep="dataInput"
-        />
+    <>
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold mb-2">Data Input Management</h3>
+        <p className="text-muted-foreground">
+          Upload and manage your supply chain data files for analysis and planning
+        </p>
+      </div>
 
-        {/* Main Content */}
-        <div className="mt-8">
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold mb-2">Data Input Management</h1>
-                <p className="text-muted-foreground">
-                  Upload and manage your supply chain data files for analysis and planning
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Upload Section */}
-                <div className="lg:col-span-1">
-                  <Card>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Upload Section */}
+        <div className="lg:col-span-1">
+          <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-2">
                         <Upload className="h-5 w-5" />
@@ -175,12 +150,12 @@ const DataInput = () => {
                         <p>• Data will be validated automatically</p>
                       </div>
                     </CardContent>
-                  </Card>
-                </div>
+          </Card>
+        </div>
 
-                {/* File Management Section */}
-                <div className="lg:col-span-2">
-                  <Card>
+        {/* File Management Section */}
+        <div className="lg:col-span-2">
+          <Card>
                     <CardHeader>
                       <CardTitle>Uploaded Files</CardTitle>
                       <CardDescription>
@@ -240,13 +215,11 @@ const DataInput = () => {
                           </div>
                         </div>
                       )}
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
