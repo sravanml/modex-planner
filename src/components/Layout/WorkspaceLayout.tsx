@@ -23,15 +23,11 @@ export function WorkspaceLayout({
       <div className="p-6">
         {/* Workspace Header */}
         <div className="mb-6">
-          <div className="flex items-center space-x-2 text-sm text-muted-foreground mb-2">
+          <div className="flex items-center space-x-2 text-sm font-bold mb-4">
             <span className="capitalize">{moduleId.replace('-', ' & ')}</span>
             <span>/</span>
             <span className="capitalize">{subModuleId.replace('-', ' ')}</span>
           </div>
-          <h1 className="text-3xl font-bold">{title}</h1>
-          {description && (
-            <p className="text-muted-foreground mt-2">{description}</p>
-          )}
         </div>
 
         {/* Workflow Navigation */}

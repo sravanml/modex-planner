@@ -95,11 +95,6 @@ export function AppSidebar() {
     <Sidebar className={isCollapsed ? "w-14" : "w-64"} collapsible="icon">
       <div className="p-4">
         <SidebarTrigger className="mb-4" />
-        {!isCollapsed && (
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold text-sidebar-foreground">Supply Chain Planning</h2>
-          </div>
-        )}
       </div>
 
       <SidebarContent>
