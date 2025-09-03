@@ -61,7 +61,38 @@ const Prediction = () => {
   const [chatHistory, setChatHistory] = useState([
     {
       type: 'ai',
-      message: 'Hello! I\'m ModEx AI. I can help you understand your supply chain predictions and answer questions about model results. How can I assist you today?'
+      message: "Hello! I'm ModEx AI. I can help you understand your supply chain predictions and answer questions about model results. How can I assist you today?",
+      timestamp: '2024-01-16 09:00:00'
+    },
+    {
+      type: 'user',
+      message: 'What are the key factors driving the forecast for Widget A?',
+      timestamp: '2024-01-16 09:05:00'
+    },
+    {
+      type: 'ai',
+      message: 'Based on your selected model run, the key factors driving Widget A forecast include: 1) Seasonal demand patterns showing 15% increase in Q2, 2) Regional market expansion in North America, 3) Historical sales data indicating strong correlation with economic indicators. The model confidence level is 87%.',
+      timestamp: '2024-01-16 09:05:30'
+    },
+    {
+      type: 'user',
+      message: 'How accurate has this prediction model been historically?',
+      timestamp: '2024-01-16 09:10:00'
+    },
+    {
+      type: 'ai',
+      message: 'The model has shown strong historical performance with an average accuracy of 94.2% over the past 12 months. For Widget A specifically, the accuracy rate is 91.5%. The model performs best during stable market conditions and may have reduced accuracy during supply chain disruptions.',
+      timestamp: '2024-01-16 09:10:45'
+    },
+    {
+      type: 'user',
+      message: 'What risks should I consider for the upcoming quarter?',
+      timestamp: '2024-01-16 09:15:00'
+    },
+    {
+      type: 'ai',
+      message: 'Key risks for the upcoming quarter include: 1) Supply chain bottlenecks in raw material procurement, 2) Potential demand volatility due to economic uncertainty, 3) Seasonal inventory buildup requirements, 4) Transportation cost fluctuations. I recommend maintaining safety stock levels at 15% above normal and monitoring supplier lead times closely.',
+      timestamp: '2024-01-16 09:16:00'
     }
   ]);
   const [showChatHistory, setShowChatHistory] = useState(false);
@@ -124,14 +155,16 @@ const Prediction = () => {
 
     setChatHistory(prev => [...prev, {
       type: 'user',
-      message: chatMessage
+      message: chatMessage,
+      timestamp: new Date().toISOString()
     }]);
 
     // Simulate AI response
     setTimeout(() => {
       setChatHistory(prev => [...prev, {
         type: 'ai',
-        message: 'Based on your selected model run, I can see that the demand forecast shows a 15% increase in Q2. The model confidence level is 87%. Would you like me to explain the key factors driving this prediction?'
+        message: 'Based on your selected model run, I can see that the demand forecast shows a 15% increase in Q2. The model confidence level is 87%. Would you like me to explain the key factors driving this prediction?',
+        timestamp: new Date().toISOString()
       }]);
     }, 1500);
 
@@ -305,7 +338,7 @@ const Prediction = () => {
                                 {chat.type === 'user' ? 'You' : 'ModEx AI'}
                               </span>
                               <span className="text-xs opacity-70">
-                                {new Date().toLocaleTimeString()}
+                                {chat.timestamp ? new Date(chat.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString()}
                               </span>
                             </div>
                             <p className="text-sm">{chat.message}</p>
