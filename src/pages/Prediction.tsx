@@ -218,9 +218,7 @@ const Prediction = () => {
 
   const sampleQuestions = [
     "What are the key factors driving the forecast?",
-    "How accurate is this prediction model?",
-    "What risks should I consider?",
-    "Can you explain the seasonal trends?"
+    "How accurate is this prediction model?"
   ];
 
   return (
@@ -396,15 +394,15 @@ const Prediction = () => {
               </div>
 
               {/* Sample Questions */}
-              <div className="border-t p-4 bg-muted/50 flex-shrink-0">
-                <p className="text-sm font-medium mb-3">Suggested Questions:</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <div className="border-t p-3 bg-muted/50 flex-shrink-0">
+                <p className="text-sm font-medium mb-2">Suggested Questions:</p>
+                <div className="flex gap-2">
                   {sampleQuestions.map((question, index) => (
                     <Button
                       key={index}
                       variant="outline"
                       size="sm"
-                      className="text-xs h-auto py-2 px-3 text-left justify-start whitespace-normal"
+                      className="text-xs h-auto py-2 px-3 text-left justify-start whitespace-normal flex-1"
                       onClick={() => setChatMessage(question)}
                     >
                       {question}
