@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { 
   BarChart3, 
   TrendingUp, 
@@ -297,20 +297,18 @@ const Reporting = () => {
                 <MessageSquare className="h-5 w-5" />
                 <span>AI Insights</span>
               </div>
-              <Dialog open={showChatHistory} onOpenChange={setShowChatHistory}>
-                <DialogTrigger asChild>
+              <Popover open={showChatHistory} onOpenChange={setShowChatHistory}>
+                <PopoverTrigger asChild>
                   <Button variant="ghost" size="sm">
                     <History className="h-4 w-4" />
                   </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-md max-h-[400px] overflow-hidden">
-                  <DialogHeader>
-                    <DialogTitle className="flex items-center space-x-2">
-                      <History className="h-5 w-5" />
-                      <span>Chat History</span>
-                    </DialogTitle>
-                  </DialogHeader>
-                  <div className="overflow-y-auto flex-1 space-y-3 pr-2 max-h-[300px]">
+                </PopoverTrigger>
+                <PopoverContent align="end" className="w-80 max-h-72 overflow-y-auto p-0">
+                  <div className="p-3 border-b font-medium text-sm flex items-center space-x-2">
+                    <History className="h-4 w-4" />
+                    <span>Chat History</span>
+                  </div>
+                  <div className="p-2 space-y-2">
                     {chatSessions.map((session) => (
                       <div 
                         key={session.id} 
@@ -324,8 +322,8 @@ const Reporting = () => {
                       </div>
                     ))}
                   </div>
-                </DialogContent>
-              </Dialog>
+                </PopoverContent>
+              </Popover>
             </CardTitle>
             <CardDescription>
               Ask questions about your data

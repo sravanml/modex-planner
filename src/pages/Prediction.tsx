@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { 
   Play, 
   Calendar, 
@@ -344,23 +344,21 @@ const Prediction = () => {
                   <MessageSquare className="h-5 w-5" />
                   <span>ModEx AI - Your Supply Chain Assistant</span>
                 </div>
-                <Dialog open={showChatHistory} onOpenChange={setShowChatHistory}>
-                  <DialogTrigger asChild>
+                <Popover open={showChatHistory} onOpenChange={setShowChatHistory}>
+                  <PopoverTrigger asChild>
                     <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
                       <History className="h-4 w-4" />
                     </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-md max-h-[400px] overflow-hidden">
-                    <DialogHeader>
-                      <DialogTitle className="flex items-center space-x-2">
-                        <History className="h-5 w-5" />
-                        <span>Chat History</span>
-                      </DialogTitle>
-                    </DialogHeader>
-                    <div className="overflow-y-auto flex-1 space-y-3 pr-2 max-h-[300px]">
+                  </PopoverTrigger>
+                  <PopoverContent align="end" className="w-80 max-h-72 overflow-y-auto p-0">
+                    <div className="p-3 border-b font-medium text-sm flex items-center space-x-2">
+                      <History className="h-4 w-4" />
+                      <span>Chat History</span>
+                    </div>
+                    <div className="p-2 space-y-2">
                       {chatSessions.map((session) => (
-                        <div 
-                          key={session.id} 
+                        <div
+                          key={session.id}
                           className="p-3 border rounded-lg hover:bg-muted cursor-pointer transition-colors"
                         >
                           <h4 className="font-medium text-sm mb-1">{session.name}</h4>
@@ -371,8 +369,8 @@ const Prediction = () => {
                         </div>
                       ))}
                     </div>
-                  </DialogContent>
-                </Dialog>
+                  </PopoverContent>
+                </Popover>
               </CardTitle>
               <CardDescription className="text-white/80">
                 Ask questions about your predictions and get intelligent insights
