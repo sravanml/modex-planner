@@ -148,203 +148,202 @@ const Reporting = () => {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* AI Insights Panel */}
-        <div className="lg:col-span-1">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2 text-sm font-bold">
-                <MessageSquare className="h-5 w-5" />
-                <span>AI Insights</span>
-              </CardTitle>
-              <CardDescription>
-                Ask questions about your data
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Textarea
-                placeholder="Ask about predictions, final plans, or actuals..."
-                value={aiQuery}
-                onChange={(e) => setAiQuery(e.target.value)}
-                className="min-h-[100px]"
-              />
-              <Button onClick={handleAiQuery} className="w-full">
-                Ask AI
+      {/* Key Metrics Banner */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center space-x-2">
+              <Target className="h-8 w-8 text-primary" />
+              <div>
+                <p className="text-2xl font-bold">94.2%</p>
+                <p className="text-xs text-muted-foreground">Forecast Accuracy</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center space-x-2">
+              <TrendingUp className="h-8 w-8 text-success" />
+              <div>
+                <p className="text-2xl font-bold">+12%</p>
+                <p className="text-xs text-muted-foreground">Demand Growth</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center space-x-2">
+              <Package className="h-8 w-8 text-warning" />
+              <div>
+                <p className="text-2xl font-bold">87%</p>
+                <p className="text-xs text-muted-foreground">Service Level</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center space-x-2">
+              <TrendingDown className="h-8 w-8 text-destructive" />
+              <div>
+                <p className="text-2xl font-bold">-5%</p>
+                <p className="text-xs text-muted-foreground">Inventory Cost</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* AI Insights and Key Insights Side by Side */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* AI Insights */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2 text-sm font-bold">
+              <MessageSquare className="h-5 w-5" />
+              <span>AI Insights</span>
+            </CardTitle>
+            <CardDescription>
+              Ask questions about your data
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Textarea
+              placeholder="Ask about predictions, final plans, or actuals..."
+              value={aiQuery}
+              onChange={(e) => setAiQuery(e.target.value)}
+              className="min-h-[100px]"
+            />
+            <Button onClick={handleAiQuery} className="w-full">
+              Ask AI
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Key Insights */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-bold">Key Insights</CardTitle>
+            <CardDescription>Highlights and lowlights from the selected run ID</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {insights.map((insight, index) => {
+                const IconComponent = insight.icon;
+                return (
+                  <div key={index} className="flex items-start space-x-3 p-4 border rounded-lg">
+                    <IconComponent className={`h-6 w-6 ${insight.color} mt-1`} />
+                    <div>
+                      <h4 className="font-medium mb-1">{insight.title}</h4>
+                      <p className="text-sm text-muted-foreground">{insight.description}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Graph Sections */}
+      <div className="space-y-6">
+        {/* Demand Forecast Trend */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2 text-sm font-bold">
+              <BarChart3 className="h-5 w-5" />
+              <span>Demand Forecast vs Actual</span>
+            </CardTitle>
+            <CardDescription>Weekly performance by product category</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-64 flex items-center justify-center border-2 border-dashed border-border rounded-lg">
+              <div className="text-center">
+                <BarChart3 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <p className="text-muted-foreground">Interactive chart would display here</p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Showing forecast accuracy and variance trends
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Forecast Accuracy Comparison */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-bold">Forecast vs Actual Comparison</CardTitle>
+            <CardDescription>Detailed accuracy metrics by region and time period</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-medium mb-4">Gap Analysis</h4>
+                <div className="space-y-3">
+                  {forecastData.map((item, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 border rounded">
+                      <span className="font-medium">{item.week}</span>
+                      <div className="text-right">
+                        <p className="text-sm">
+                          Actual: <span className="font-medium">{item.actual}</span>
+                        </p>
+                        <p className="text-sm">
+                          Forecast: <span className="font-medium">{item.forecast}</span>
+                        </p>
+                        <p className={`text-xs ${
+                          item.actual > item.forecast ? 'text-success' : 'text-destructive'
+                        }`}>
+                          Gap: {item.actual - item.forecast}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-medium mb-4">Accuracy Score</h4>
+                <div className="text-center p-8 border rounded-lg">
+                  <div className="text-4xl font-bold text-primary mb-2">94.2%</div>
+                  <p className="text-muted-foreground">Overall Accuracy</p>
+                  <div className="mt-4 text-sm text-muted-foreground">
+                    <p>Based on 4 weeks of data</p>
+                    <p>Electronics category</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Data Export */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-bold">Export Data</CardTitle>
+            <CardDescription>Download comprehensive reports and model predictions</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex space-x-4">
+              <Button variant="outline">
+                <Download className="h-4 w-4 mr-2" />
+                Export Final Plan
               </Button>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Reports Display */}
-        <div className="lg:col-span-3 space-y-6">
-          {/* Key Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <Card>
-                      <CardContent className="p-6">
-                        <div className="flex items-center space-x-2">
-                          <Target className="h-8 w-8 text-primary" />
-                          <div>
-                            <p className="text-2xl font-bold">94.2%</p>
-                            <p className="text-xs text-muted-foreground">Forecast Accuracy</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card>
-                      <CardContent className="p-6">
-                        <div className="flex items-center space-x-2">
-                          <TrendingUp className="h-8 w-8 text-success" />
-                          <div>
-                            <p className="text-2xl font-bold">+12%</p>
-                            <p className="text-xs text-muted-foreground">Demand Growth</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card>
-                      <CardContent className="p-6">
-                        <div className="flex items-center space-x-2">
-                          <Package className="h-8 w-8 text-warning" />
-                          <div>
-                            <p className="text-2xl font-bold">87%</p>
-                            <p className="text-xs text-muted-foreground">Service Level</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card>
-                      <CardContent className="p-6">
-                        <div className="flex items-center space-x-2">
-                          <TrendingDown className="h-8 w-8 text-destructive" />
-                          <div>
-                            <p className="text-2xl font-bold">-5%</p>
-                            <p className="text-xs text-muted-foreground">Inventory Cost</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-          </div>
-
-          {/* Demand Forecast Trend */}
-          <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center space-x-2 text-sm font-bold">
-                        <BarChart3 className="h-5 w-5" />
-                        <span>Demand Forecast vs Actual</span>
-                      </CardTitle>
-                      <CardDescription>Weekly performance by product category</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="h-64 flex items-center justify-center border-2 border-dashed border-border rounded-lg">
-                        <div className="text-center">
-                          <BarChart3 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                          <p className="text-muted-foreground">Interactive chart would display here</p>
-                          <p className="text-xs text-muted-foreground mt-2">
-                            Showing forecast accuracy and variance trends
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-          </Card>
-
-          {/* Forecast Accuracy Comparison */}
-          <Card>
-                    <CardHeader>
-                      <CardTitle className="text-sm font-bold">Forecast vs Actual Comparison</CardTitle>
-                      <CardDescription>Detailed accuracy metrics by region and time period</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <h4 className="font-medium mb-4">Gap Analysis</h4>
-                          <div className="space-y-3">
-                            {forecastData.map((item, index) => (
-                              <div key={index} className="flex items-center justify-between p-3 border rounded">
-                                <span className="font-medium">{item.week}</span>
-                                <div className="text-right">
-                                  <p className="text-sm">
-                                    Actual: <span className="font-medium">{item.actual}</span>
-                                  </p>
-                                  <p className="text-sm">
-                                    Forecast: <span className="font-medium">{item.forecast}</span>
-                                  </p>
-                                  <p className={`text-xs ${
-                                    item.actual > item.forecast ? 'text-success' : 'text-destructive'
-                                  }`}>
-                                    Gap: {item.actual - item.forecast}
-                                  </p>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <h4 className="font-medium mb-4">Accuracy Score</h4>
-                          <div className="text-center p-8 border rounded-lg">
-                            <div className="text-4xl font-bold text-primary mb-2">94.2%</div>
-                            <p className="text-muted-foreground">Overall Accuracy</p>
-                            <div className="mt-4 text-sm text-muted-foreground">
-                              <p>Based on 4 weeks of data</p>
-                              <p>Electronics category</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-          </Card>
-
-          {/* Insights & Recommendations */}
-          <Card>
-                    <CardHeader>
-                      <CardTitle className="text-sm font-bold">Key Insights</CardTitle>
-                      <CardDescription>Highlights and lowlights from the selected run ID</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {insights.map((insight, index) => {
-                          const IconComponent = insight.icon;
-                          return (
-                            <div key={index} className="flex items-start space-x-3 p-4 border rounded-lg">
-                              <IconComponent className={`h-6 w-6 ${insight.color} mt-1`} />
-                              <div>
-                                <h4 className="font-medium mb-1">{insight.title}</h4>
-                                <p className="text-sm text-muted-foreground">{insight.description}</p>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </CardContent>
-          </Card>
-
-          {/* Data Export */}
-          <Card>
-                    <CardHeader>
-                      <CardTitle className="text-sm font-bold">Export Data</CardTitle>
-                      <CardDescription>Download comprehensive reports and model predictions</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex space-x-4">
-                        <Button variant="outline">
-                          <Download className="h-4 w-4 mr-2" />
-                          Export Final Plan
-                        </Button>
-                        <Button variant="outline">
-                          <Download className="h-4 w-4 mr-2" />
-                          Export Predictions
-                        </Button>
-                        <Button variant="outline">
-                          <Download className="h-4 w-4 mr-2" />
-                          Full Report (PDF)
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-        </div>
+              <Button variant="outline">
+                <Download className="h-4 w-4 mr-2" />
+                Export Predictions
+              </Button>
+              <Button variant="outline">
+                <Download className="h-4 w-4 mr-2" />
+                Full Report (PDF)
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </>
   );
