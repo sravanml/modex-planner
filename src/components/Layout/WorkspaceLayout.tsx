@@ -1,5 +1,5 @@
 import { MainLayout } from "./MainLayout";
-import { WorkflowNavigation } from "./WorkflowNavigation";
+import { HorizontalNavigation } from "./HorizontalNavigation";
 
 interface WorkspaceLayoutProps {
   children: React.ReactNode;
@@ -30,8 +30,8 @@ export function WorkspaceLayout({
           </div>
         </div>
 
-        {/* Workflow Navigation */}
-        <WorkflowNavigation 
+        {/* Horizontal Navigation */}
+        <HorizontalNavigation 
           moduleId={moduleId}
           subModuleId={subModuleId}
           currentStep={currentStep}
