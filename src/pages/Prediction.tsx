@@ -95,6 +95,38 @@ const Prediction = () => {
       timestamp: '2024-01-16 09:16:00'
     }
   ]);
+  const [chatSessions] = useState([
+    {
+      id: 'session_1',
+      name: 'Widget A Demand Forecast Analysis',
+      lastMessage: 'What are the key factors driving the forecast...',
+      timestamp: '2 hours ago'
+    },
+    {
+      id: 'session_2',
+      name: 'Model Accuracy Discussion',
+      lastMessage: 'How accurate has this prediction model...',
+      timestamp: '4 hours ago'
+    },
+    {
+      id: 'session_3',
+      name: 'Risk Assessment Q2 2024',
+      lastMessage: 'What risks should I consider for the...',
+      timestamp: '1 day ago'
+    },
+    {
+      id: 'session_4',
+      name: 'Seasonal Patterns Analysis',
+      lastMessage: 'Can you explain the seasonal trends...',
+      timestamp: '2 days ago'
+    },
+    {
+      id: 'session_5',
+      name: 'Supply Chain Disruption Impact',
+      lastMessage: 'How will the supplier delays affect...',
+      timestamp: '3 days ago'
+    }
+  ]);
   const [showChatHistory, setShowChatHistory] = useState(false);
 
   const { toast } = useToast();
@@ -325,24 +357,17 @@ const Prediction = () => {
                         <span>Chat History</span>
                       </DialogTitle>
                     </DialogHeader>
-                    <div className="overflow-y-auto max-h-[60vh] space-y-4 pr-2">
-                      {chatHistory.map((chat, index) => (
-                        <div key={index} className={`flex ${chat.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                          <div className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                            chat.type === 'user' 
-                              ? 'bg-primary text-primary-foreground' 
-                              : 'bg-muted text-muted-foreground'
-                          }`}>
-                            <div className="flex items-center space-x-2 mb-1">
-                              <span className="text-xs font-medium">
-                                {chat.type === 'user' ? 'You' : 'ModEx AI'}
-                              </span>
-                              <span className="text-xs opacity-70">
-                                {chat.timestamp ? new Date(chat.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString()}
-                              </span>
-                            </div>
-                            <p className="text-sm">{chat.message}</p>
-                          </div>
+                    <div className="overflow-y-auto max-h-[60vh] space-y-3 pr-2">
+                      {chatSessions.map((session) => (
+                        <div 
+                          key={session.id} 
+                          className="p-3 border rounded-lg hover:bg-muted cursor-pointer transition-colors"
+                        >
+                          <h4 className="font-medium text-sm mb-1">{session.name}</h4>
+                          <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
+                            {session.lastMessage}
+                          </p>
+                          <span className="text-xs text-muted-foreground">{session.timestamp}</span>
                         </div>
                       ))}
                     </div>

@@ -29,6 +29,44 @@ const Reporting = () => {
   const [planId, setPlanId] = useState("");
   const [productCategory, setProductCategory] = useState("");
   const [aiQuery, setAiQuery] = useState("");
+  const [chatSessions] = useState([
+    {
+      id: 'session_1',
+      name: 'Forecast Accuracy Analysis',
+      lastMessage: 'What factors contributed to the 94.2% forecast...',
+      timestamp: '1 hour ago'
+    },
+    {
+      id: 'session_2',
+      name: 'Demand Growth Discussion',
+      lastMessage: 'Why did we see a 12% demand growth...',
+      timestamp: '3 hours ago'
+    },
+    {
+      id: 'session_3',
+      name: 'Service Level Improvement',
+      lastMessage: 'What should I focus on to improve the 87%...',
+      timestamp: '5 hours ago'
+    },
+    {
+      id: 'session_4',
+      name: 'Inventory Cost Optimization',
+      lastMessage: 'How can we reduce the inventory cost...',
+      timestamp: '1 day ago'
+    },
+    {
+      id: 'session_5',
+      name: 'Regional Performance Review',
+      lastMessage: 'Which regions are performing better and...',
+      timestamp: '2 days ago'
+    },
+    {
+      id: 'session_6',
+      name: 'Seasonal Trend Analysis',
+      lastMessage: 'Can you explain the seasonal patterns in...',
+      timestamp: '3 days ago'
+    }
+  ]);
   const [showChatHistory, setShowChatHistory] = useState(false);
   const [chatHistory] = useState([
     {
@@ -272,24 +310,17 @@ const Reporting = () => {
                       <span>Chat History</span>
                     </DialogTitle>
                   </DialogHeader>
-                  <div className="overflow-y-auto max-h-[60vh] space-y-4 pr-2">
-                    {chatHistory.map((chat, index) => (
-                      <div key={index} className={`flex ${chat.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                          chat.type === 'user' 
-                            ? 'bg-primary text-primary-foreground' 
-                            : 'bg-muted text-muted-foreground'
-                        }`}>
-                          <div className="flex items-center space-x-2 mb-1">
-                            <span className="text-xs font-medium">
-                              {chat.type === 'user' ? 'You' : 'AI Assistant'}
-                            </span>
-                            <span className="text-xs opacity-70">
-                              {chat.timestamp ? new Date(chat.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString()}
-                            </span>
-                          </div>
-                          <p className="text-sm">{chat.message}</p>
-                        </div>
+                  <div className="overflow-y-auto max-h-[60vh] space-y-3 pr-2">
+                    {chatSessions.map((session) => (
+                      <div 
+                        key={session.id} 
+                        className="p-3 border rounded-lg hover:bg-muted cursor-pointer transition-colors"
+                      >
+                        <h4 className="font-medium text-sm mb-1">{session.name}</h4>
+                        <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
+                          {session.lastMessage}
+                        </p>
+                        <span className="text-xs text-muted-foreground">{session.timestamp}</span>
                       </div>
                     ))}
                   </div>
