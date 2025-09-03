@@ -337,8 +337,8 @@ const Prediction = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* ModEx AI Chat Interface */}
         <div className="lg:col-span-2">
-          <Card className="h-[500px] flex flex-col">
-            <CardHeader className="border-b bg-gradient-primary text-white rounded-t-lg">
+          <Card className="h-[500px] flex flex-col overflow-hidden">
+            <CardHeader className="border-b bg-gradient-primary text-white rounded-t-lg flex-shrink-0">
               <CardTitle className="flex items-center justify-between text-sm font-bold">
                 <div className="flex items-center space-x-2">
                   <MessageSquare className="h-5 w-5" />
@@ -379,9 +379,9 @@ const Prediction = () => {
               </CardDescription>
             </CardHeader>
             
-            <CardContent className="flex-1 flex flex-col p-0">
+            <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
               {/* Chat Messages */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
+              <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {chatHistory.map((chat, index) => (
                   <div key={index} className={`flex ${chat.type === 'user' ? 'justify-end' : 'justify-start'}`}>
                     <div className={`max-w-[80%] rounded-lg px-4 py-2 break-words ${
@@ -396,7 +396,7 @@ const Prediction = () => {
               </div>
 
               {/* Sample Questions */}
-              <div className="border-t p-4 bg-muted/50">
+              <div className="border-t p-4 bg-muted/50 flex-shrink-0">
                 <p className="text-sm font-medium mb-3">Suggested Questions:</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   {sampleQuestions.map((question, index) => (
@@ -414,7 +414,7 @@ const Prediction = () => {
               </div>
 
               {/* Chat Input */}
-              <div className="border-t p-4">
+              <div className="border-t p-4 flex-shrink-0">
                 <div className="flex space-x-2">
                   <Textarea
                     placeholder="Ask ModEx AI about your predictions..."
