@@ -124,8 +124,8 @@ const DataInput = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="lg:col-span-1">
                 <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary transition-colors">
                   <Upload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                   <Label htmlFor="file-upload" className="cursor-pointer">
