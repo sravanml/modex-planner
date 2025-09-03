@@ -163,202 +163,207 @@ const Prediction = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Upload Section */}
-        <div className="lg:col-span-1 space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center space-x-2 text-sm font-bold">
-                        <BarChart3 className="h-5 w-5" />
-                        <span>Initiate Model Run</span>
-                      </CardTitle>
-                      <CardDescription>
-                        Set parameters for prediction generation
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="from-date">From Date</Label>
-                        <Input
-                          id="from-date"
-                          type="date"
-                          value={fromDate}
-                          onChange={(e) => setFromDate(e.target.value)}
-                        />
-                      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Left Column - Horizontal Sections */}
+        <div className="lg:col-span-3 space-y-6">
+          {/* Initiate Model Run - Horizontal */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2 text-sm font-bold">
+                <BarChart3 className="h-5 w-5" />
+                <span>Initiate Model Run</span>
+              </CardTitle>
+              <CardDescription>
+                Set parameters for prediction generation
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="from-date">From Date</Label>
+                  <Input
+                    id="from-date"
+                    type="date"
+                    value={fromDate}
+                    onChange={(e) => setFromDate(e.target.value)}
+                  />
+                </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="to-date">To Date</Label>
-                        <Input
-                          id="to-date"
-                          type="date"
-                          value={toDate}
-                          onChange={(e) => setToDate(e.target.value)}
-                        />
-                      </div>
+                <div className="space-y-2">
+                  <Label htmlFor="to-date">To Date</Label>
+                  <Input
+                    id="to-date"
+                    type="date"
+                    value={toDate}
+                    onChange={(e) => setToDate(e.target.value)}
+                  />
+                </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="region">Region</Label>
-                        <Select value={region} onValueChange={setRegion}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select region" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="north-america">North America</SelectItem>
-                            <SelectItem value="europe">Europe</SelectItem>
-                            <SelectItem value="asia-pacific">Asia Pacific</SelectItem>
-                            <SelectItem value="latin-america">Latin America</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                <div className="space-y-2">
+                  <Label htmlFor="region">Region</Label>
+                  <Select value={region} onValueChange={setRegion}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select region" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="north-america">North America</SelectItem>
+                      <SelectItem value="europe">Europe</SelectItem>
+                      <SelectItem value="asia-pacific">Asia Pacific</SelectItem>
+                      <SelectItem value="latin-america">Latin America</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-                      <div className="space-y-2">
-                        <Label>Input Files</Label>
-                        <div className="space-y-2">
-                          <div className="flex items-center space-x-2">
-                            <input 
-                              type="checkbox" 
-                              id="demand-data" 
-                              className="rounded border-border"
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedFiles([...selectedFiles, "demand_data"]);
-                                } else {
-                                  setSelectedFiles(selectedFiles.filter(f => f !== "demand_data"));
-                                }
-                              }}
-                            />
-                            <Label htmlFor="demand-data" className="text-sm cursor-pointer">
-                              demand_data_2024.csv
-                            </Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <input 
-                              type="checkbox" 
-                              id="inventory-levels" 
-                              className="rounded border-border"
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedFiles([...selectedFiles, "inventory_levels"]);
-                                } else {
-                                  setSelectedFiles(selectedFiles.filter(f => f !== "inventory_levels"));
-                                }
-                              }}
-                            />
-                            <Label htmlFor="inventory-levels" className="text-sm cursor-pointer">
-                              inventory_levels.xlsx
-                            </Label>
-                          </div>
-                        </div>
-                      </div>
+                <div className="space-y-2">
+                  <Label>Input Files</Label>
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <input 
+                        type="checkbox" 
+                        id="demand-data" 
+                        className="rounded border-border"
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedFiles([...selectedFiles, "demand_data"]);
+                          } else {
+                            setSelectedFiles(selectedFiles.filter(f => f !== "demand_data"));
+                          }
+                        }}
+                      />
+                      <Label htmlFor="demand-data" className="text-xs cursor-pointer">
+                        demand_data_2024.csv
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <input 
+                        type="checkbox" 
+                        id="inventory-levels" 
+                        className="rounded border-border"
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedFiles([...selectedFiles, "inventory_levels"]);
+                          } else {
+                            setSelectedFiles(selectedFiles.filter(f => f !== "inventory_levels"));
+                          }
+                        }}
+                      />
+                      <Label htmlFor="inventory-levels" className="text-xs cursor-pointer">
+                        inventory_levels.xlsx
+                      </Label>
+                    </div>
+                  </div>
+                </div>
 
-                      <Button 
-                        className="w-full bg-gradient-primary hover:opacity-90"
-                        onClick={handleGeneratePredictions}
-                      >
-                        <Play className="h-4 w-4 mr-2" />
-                        Generate Predictions
-                      </Button>
-                    </CardContent>
-                  </Card>
+                <div className="flex items-end">
+                  <Button 
+                    className="w-full bg-gradient-primary hover:opacity-90"
+                    onClick={handleGeneratePredictions}
+                  >
+                    <Play className="h-4 w-4 mr-2" />
+                    Generate Predictions
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-                  {/* Model Runs */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-sm font-bold">Model Runs</CardTitle>
-                      <CardDescription>Track prediction generation progress</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      {modelRuns.map((run) => (
-                        <div key={run.id} className="border rounded-lg p-3">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="font-medium text-sm">{run.id}</span>
-                            {getStatusIcon(run.status)}
-                          </div>
-                          <p className="text-xs text-muted-foreground mb-2">
-                            {run.dateRange} • {run.region}
-                          </p>
-                          {run.status === 'in-progress' && (
-                            <Progress value={run.progress} className="mb-2" />
-                          )}
-                          <div className="flex space-x-2">
-                            <Button variant="ghost" size="sm">
-                              <Download className="h-3 w-3" />
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <FileText className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </CardContent>
+          {/* ModEx AI Chat Interface - Horizontal */}
+          <Card className="h-[400px] flex flex-col">
+            <CardHeader className="border-b bg-gradient-primary text-white rounded-t-lg">
+              <CardTitle className="flex items-center space-x-2 text-sm font-bold">
+                <MessageSquare className="h-5 w-5" />
+                <span>ModEx AI - Your Supply Chain Assistant</span>
+              </CardTitle>
+              <CardDescription className="text-white/80">
+                Ask questions about your predictions and get intelligent insights
+              </CardDescription>
+            </CardHeader>
+            
+            <CardContent className="flex-1 flex flex-col p-0">
+              {/* Chat Messages */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                {chatHistory.map((chat, index) => (
+                  <div key={index} className={`flex ${chat.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`max-w-[80%] rounded-lg px-4 py-2 ${
+                      chat.type === 'user' 
+                        ? 'bg-primary text-primary-foreground' 
+                        : 'bg-muted text-muted-foreground'
+                    }`}>
+                      <p className="text-sm">{chat.message}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Sample Questions */}
+              <div className="border-t p-4">
+                <p className="text-sm font-medium mb-3">Suggested Questions:</p>
+                <div className="grid grid-cols-4 gap-2">
+                  {sampleQuestions.map((question, index) => (
+                    <Button
+                      key={index}
+                      variant="outline"
+                      size="sm"
+                      className="text-xs h-auto py-2 px-3"
+                      onClick={() => setChatMessage(question)}
+                    >
+                      {question}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Chat Input */}
+              <div className="border-t p-4">
+                <div className="flex space-x-2">
+                  <Textarea
+                    placeholder="Ask ModEx AI about your predictions..."
+                    value={chatMessage}
+                    onChange={(e) => setChatMessage(e.target.value)}
+                    className="resize-none"
+                    rows={2}
+                  />
+                  <Button onClick={handleSendMessage} className="self-end">
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
           </Card>
         </div>
 
-        {/* ModEx AI Chat Interface */}
-        <div className="lg:col-span-2">
-                  <Card className="h-[600px] flex flex-col">
-                    <CardHeader className="border-b bg-gradient-primary text-white rounded-t-lg">
-                      <CardTitle className="flex items-center space-x-2 text-sm font-bold">
-                        <MessageSquare className="h-5 w-5" />
-                        <span>ModEx AI - Your Supply Chain Assistant</span>
-                      </CardTitle>
-                      <CardDescription className="text-white/80">
-                        Ask questions about your predictions and get intelligent insights
-                      </CardDescription>
-                    </CardHeader>
-                    
-                    <CardContent className="flex-1 flex flex-col p-0">
-                      {/* Chat History */}
-                      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                        {chatHistory.map((chat, index) => (
-                          <div key={index} className={`flex ${chat.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                              chat.type === 'user' 
-                                ? 'bg-primary text-primary-foreground' 
-                                : 'bg-muted text-muted-foreground'
-                            }`}>
-                              <p className="text-sm">{chat.message}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Sample Questions */}
-                      <div className="border-t p-4">
-                        <p className="text-sm font-medium mb-3">Suggested Questions:</p>
-                        <div className="grid grid-cols-2 gap-2">
-                          {sampleQuestions.map((question, index) => (
-                            <Button
-                              key={index}
-                              variant="outline"
-                              size="sm"
-                              className="text-xs h-auto py-2 px-3"
-                              onClick={() => setChatMessage(question)}
-                            >
-                              {question}
-                            </Button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Chat Input */}
-                      <div className="border-t p-4">
-                        <div className="flex space-x-2">
-                          <Textarea
-                            placeholder="Ask ModEx AI about your predictions..."
-                            value={chatMessage}
-                            onChange={(e) => setChatMessage(e.target.value)}
-                            className="resize-none"
-                            rows={2}
-                          />
-                          <Button onClick={handleSendMessage} className="self-end">
-                            <Send className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                   </Card>
+        {/* Right Column - Model Runs */}
+        <div className="lg:col-span-1">
+          <Card className="h-full">
+            <CardHeader>
+              <CardTitle className="text-sm font-bold">Model Runs</CardTitle>
+              <CardDescription>Track prediction generation progress</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {modelRuns.map((run) => (
+                <div key={run.id} className="border rounded-lg p-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-medium text-sm">{run.id}</span>
+                    {getStatusIcon(run.status)}
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    {run.dateRange} • {run.region}
+                  </p>
+                  {run.status === 'in-progress' && (
+                    <Progress value={run.progress} className="mb-2" />
+                  )}
+                  <div className="flex space-x-2">
+                    <Button variant="ghost" size="sm">
+                      <Download className="h-3 w-3" />
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <FileText className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </>
