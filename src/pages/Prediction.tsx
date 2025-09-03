@@ -168,7 +168,7 @@ const Prediction = () => {
         <CardHeader>
           <CardTitle className="flex items-center space-x-2 text-sm font-bold">
             <BarChart3 className="h-5 w-5" />
-            <span>Initiate Model Run</span>
+            <span>Generate Predictions</span>
           </CardTitle>
           <CardDescription>
             Set parameters for prediction generation
@@ -257,7 +257,7 @@ const Prediction = () => {
                 onClick={handleGeneratePredictions}
               >
                 <Play className="h-4 w-4 mr-2" />
-                Generate Predictions
+                Run Model
               </Button>
             </div>
           </div>
