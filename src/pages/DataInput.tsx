@@ -3,9 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SidebarProvider } from "@/components/ui/sidebar";
 import Navbar from "@/components/Layout/Navbar";
-import { PlanningModulesSidebar } from "@/components/Layout/PlanningModulesSidebar";
+import { ModuleSelector } from "@/components/Layout/ModuleSelector";
 import { 
   Upload, 
   FileSpreadsheet, 
@@ -119,15 +118,16 @@ const DataInput = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      <SidebarProvider>
-        <div className="flex min-h-screen w-full">
-          <PlanningModulesSidebar 
-            selectedModule={selectedModule}
-            onModuleSelect={handleModuleSelect}
-          />
-          
-          <main className="flex-1">
-            <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Module Selection Section */}
+        <ModuleSelector 
+          selectedModule={selectedModule}
+          onModuleSelect={handleModuleSelect}
+          currentStep="dataInput"
+        />
+
+        {/* Main Content */}
+        <div className="mt-8">
               <div className="mb-8">
                 <h1 className="text-3xl font-bold mb-2">Data Input Management</h1>
                 <p className="text-muted-foreground">
@@ -244,10 +244,8 @@ const DataInput = () => {
                   </Card>
                 </div>
               </div>
-            </div>
-          </main>
         </div>
-      </SidebarProvider>
+      </div>
     </div>
   );
 };
