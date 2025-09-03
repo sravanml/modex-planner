@@ -18,76 +18,13 @@ const Navbar = () => {
     <nav className="bg-card border-b shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-8">
+          <div className="flex items-center">
             <Link to="/dashboard" className="flex items-center space-x-2">
               <Building2 className="h-8 w-8 text-primary" />
               <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
                 SupplyChain Pro
               </span>
             </Link>
-            
-            <div className="hidden md:flex space-x-6">
-              <Link 
-                to="/dashboard" 
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/dashboard') 
-                    ? 'text-primary bg-primary/10' 
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                Dashboard
-              </Link>
-              <Link 
-                to="/data-input" 
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/data-input') 
-                    ? 'text-primary bg-primary/10' 
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                Data Input
-              </Link>
-              <Link 
-                to="/prediction" 
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/prediction') 
-                    ? 'text-primary bg-primary/10' 
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                Predictions
-              </Link>
-              <Link 
-                to="/finalize-plan" 
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/finalize-plan') 
-                    ? 'text-primary bg-primary/10' 
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                Finalize Plan
-              </Link>
-              <Link 
-                to="/reporting" 
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/reporting') 
-                    ? 'text-primary bg-primary/10' 
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                Reporting
-              </Link>
-              <Link 
-                to="/experimentation" 
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/experimentation') 
-                    ? 'text-primary bg-primary/10' 
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                AI Lab
-              </Link>
-            </div>
           </div>
 
           <DropdownMenu>
