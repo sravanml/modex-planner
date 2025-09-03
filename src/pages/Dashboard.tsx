@@ -23,7 +23,11 @@ const Dashboard = () => {
       title: "Planning & Forecasting",
       description: "Demand planning, capacity planning, and inventory forecasting",
       icon: TrendingUp,
-      subModules: ["Demand Planning", "Capacity Planning", "Inventory Forecasting"],
+      subModules: [
+        { name: "Demand Planning", path: "demand-planning" },
+        { name: "Capacity Planning", path: "capacity-planning" },
+        { name: "Inventory Forecasting", path: "inventory-forecasting" }
+      ],
       color: "from-blue-500 to-blue-600"
     },
     {
@@ -31,7 +35,10 @@ const Dashboard = () => {
       title: "Logistics & Distribution",
       description: "Fleet planning and route optimization solutions",
       icon: Truck,
-      subModules: ["Fleet Planning", "Route Optimization"],
+      subModules: [
+        { name: "Fleet Planning", path: "fleet-planning" },
+        { name: "Route Optimization", path: "route-optimization" }
+      ],
       color: "from-green-500 to-green-600"
     },
     {
@@ -39,7 +46,11 @@ const Dashboard = () => {
       title: "Warehouse Management",
       description: "Stock replenishment, safety stock, and warehouse optimization",
       icon: Package,
-      subModules: ["Stock Replenishment", "Safety Stock Calculation", "Warehouse Layout"],
+      subModules: [
+        { name: "Stock Replenishment", path: "stock-replenishment" },
+        { name: "Safety Stock Calculation", path: "safety-stock" },
+        { name: "Warehouse Layout", path: "warehouse-layout" }
+      ],
       color: "from-purple-500 to-purple-600"
     }
   ];
@@ -49,31 +60,31 @@ const Dashboard = () => {
       title: "Data Input Management",
       description: "Upload and manage your supply chain data",
       icon: FileText,
-      path: "/data-input"
+      path: "/workspace/planning-forecasting/demand-planning/data-input"
     },
     {
       title: "Prediction & Analysis",
       description: "Generate ML-powered predictions",
       icon: BarChart3,
-      path: "/prediction"
+      path: "/workspace/planning-forecasting/demand-planning/prediction"
     },
     {
       title: "Finalize Plan",
       description: "Review and finalize your supply chain plan",
       icon: Target,
-      path: "/finalize-plan"
+      path: "/workspace/planning-forecasting/demand-planning/finalize-plan"
     },
     {
       title: "Reporting & Insights",
       description: "Analyze results and generate reports",
       icon: Calendar,
-      path: "/reporting"
+      path: "/workspace/planning-forecasting/demand-planning/reporting"
     },
     {
       title: "AI Experimentation",
       description: "Interact with ModEx AI for insights",
       icon: MessageSquare,
-      path: "/experimentation"
+      path: "/workspace/planning-forecasting/demand-planning/experimentation"
     }
   ];
 
@@ -91,7 +102,7 @@ const Dashboard = () => {
             </p>
             <Button 
               className="bg-white text-primary hover:bg-white/90"
-              onClick={() => navigate('/data-input')}
+              onClick={() => navigate('/workspace/planning-forecasting/demand-planning')}
             >
               Start Planning <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -104,8 +115,14 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {modules.map((module) => {
               const IconComponent = module.icon;
+              const moduleStartPath = `/workspace/${module.id}/${module.subModules[0].path}`;
+              
               return (
-                <Card key={module.id} className="hover:shadow-lg transition-shadow cursor-pointer group">
+                <Card 
+                  key={module.id} 
+                  className="hover:shadow-lg transition-shadow cursor-pointer group"
+                  onClick={() => navigate(moduleStartPath)}
+                >
                   <CardHeader>
                     <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${module.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                       <IconComponent className="h-6 w-6 text-white" />
@@ -116,10 +133,20 @@ const Dashboard = () => {
                   <CardContent>
                     <div className="space-y-2">
                       {module.subModules.map((subModule) => (
-                        <div key={subModule} className="flex items-center text-sm text-muted-foreground">
+                        <Button
+                          key={subModule.name}
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start h-auto p-2"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const subModulePath = `/workspace/${module.id}/${subModule.path}`;
+                            navigate(subModulePath);
+                          }}
+                        >
                           <div className="w-1.5 h-1.5 bg-primary rounded-full mr-3"></div>
-                          {subModule}
-                        </div>
+                          {subModule.name}
+                        </Button>
                       ))}
                     </div>
                   </CardContent>
