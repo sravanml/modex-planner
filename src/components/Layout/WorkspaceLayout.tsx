@@ -1,5 +1,4 @@
 import { MainLayout } from "./MainLayout";
-import { HorizontalNavigation } from "./HorizontalNavigation";
 
 interface WorkspaceLayoutProps {
   children: React.ReactNode;
@@ -29,13 +28,6 @@ export function WorkspaceLayout({
             <span className="capitalize">{subModuleId.replace('-', ' ')}</span>
           </div>
         </div>
-
-        {/* Horizontal Navigation */}
-        <HorizontalNavigation 
-          moduleId={moduleId}
-          subModuleId={subModuleId}
-          currentStep={currentStep}
-        />
 
         {/* Page Content */}
         {children}
