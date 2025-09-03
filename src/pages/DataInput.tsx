@@ -104,7 +104,7 @@ const DataInput = () => {
   return (
     <>
       <div className="mb-8">
-        <h3 className="text-xl font-semibold mb-2">Data Input Management</h3>
+        <h3 className="text-sm font-bold mb-2">Data Input Management</h3>
         <p className="text-muted-foreground">
           Upload and manage your supply chain data files for analysis and planning
         </p>
@@ -115,7 +115,7 @@ const DataInput = () => {
         <div className="lg:col-span-1">
           <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center space-x-2">
+                      <CardTitle className="flex items-center space-x-2 text-sm font-bold">
                         <Upload className="h-5 w-5" />
                         <span>Upload Files</span>
                       </CardTitle>
@@ -157,7 +157,7 @@ const DataInput = () => {
         <div className="lg:col-span-2">
           <Card>
                     <CardHeader>
-                      <CardTitle>Uploaded Files</CardTitle>
+                      <CardTitle className="text-sm font-bold">Uploaded Files</CardTitle>
                       <CardDescription>
                         Manage your uploaded data files and preview content
                       </CardDescription>
