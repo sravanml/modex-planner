@@ -158,7 +158,7 @@ const Prediction = () => {
     <>
       <div className="mb-8">
         <h3 className="text-sm font-bold mb-2">Prediction & Output Analysis</h3>
-        <p className="text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           Generate ML-powered predictions and analyze results with ModEx AI
         </p>
       </div>

@@ -105,7 +105,7 @@ const DataInput = () => {
     <>
       <div className="mb-8">
         <h3 className="text-sm font-bold mb-2">Data Input Management</h3>
-        <p className="text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           Upload and manage your supply chain data files for analysis and planning
         </p>
       </div>

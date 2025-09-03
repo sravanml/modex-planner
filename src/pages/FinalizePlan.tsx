@@ -126,7 +126,7 @@ const FinalizePlan = () => {
     <>
       <div className="mb-8">
         <h3 className="text-sm font-bold mb-2">Finalize Plan</h3>
-        <p className="text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           Review, edit, and finalize your supply chain plan based on model predictions
         </p>
       </div>

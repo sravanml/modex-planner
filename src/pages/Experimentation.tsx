@@ -143,7 +143,7 @@ const Experimentation = () => {
     <>
       <div className="mb-8">
         <h3 className="text-sm font-bold mb-2">AI Experimentation Lab</h3>
-        <p className="text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           Engage with ModEx AI to explore scenarios, ask questions, and get intelligent insights
         </p>
       </div>

@@ -61,7 +61,7 @@ const Reporting = () => {
     <>
       <div className="mb-8">
         <h3 className="text-sm font-bold mb-2">Reporting & Analytics</h3>
-        <p className="text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           Generate comprehensive reports and analytics for your supply chain data
         </p>
       </div>
