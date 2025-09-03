@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { 
   BarChart3, 
   TrendingUp, 
@@ -16,7 +17,8 @@ import {
   MessageSquare,
   Target,
   AlertTriangle,
-  CheckCircle2
+  CheckCircle2,
+  History
 } from "lucide-react";
 
 const Reporting = () => {
@@ -27,6 +29,54 @@ const Reporting = () => {
   const [planId, setPlanId] = useState("");
   const [productCategory, setProductCategory] = useState("");
   const [aiQuery, setAiQuery] = useState("");
+  const [showChatHistory, setShowChatHistory] = useState(false);
+  const [chatHistory] = useState([
+    {
+      type: 'ai',
+      message: "Hello! I'm your AI assistant for reporting and analytics. I can help you understand forecast accuracy, demand trends, and provide insights from your data. What would you like to know?",
+      timestamp: '2024-01-16 08:00:00'
+    },
+    {
+      type: 'user',
+      message: 'What factors contributed to the 94.2% forecast accuracy this quarter?',
+      timestamp: '2024-01-16 08:05:00'
+    },
+    {
+      type: 'ai',
+      message: 'The high forecast accuracy of 94.2% was driven by: 1) Improved demand sensing algorithms, 2) Better integration of external market data, 3) Reduced supply chain volatility, 4) Enhanced seasonal adjustment models. Electronics category performed particularly well with 96% accuracy.',
+      timestamp: '2024-01-16 08:05:45'
+    },
+    {
+      type: 'user',
+      message: 'Why did we see a 12% demand growth? Is this sustainable?',
+      timestamp: '2024-01-16 08:10:00'
+    },
+    {
+      type: 'ai',
+      message: 'The 12% demand growth was primarily driven by: 1) Market expansion in Asia-Pacific region (+18%), 2) New product launches in Q4, 3) Seasonal holiday demand spike, 4) Recovery in automotive sector. Sustainability depends on maintaining current market conditions and supply chain efficiency.',
+      timestamp: '2024-01-16 08:11:15'
+    },
+    {
+      type: 'user',
+      message: 'What should I focus on to improve the 87% service level?',
+      timestamp: '2024-01-16 08:15:00'
+    },
+    {
+      type: 'ai',
+      message: 'To improve service level from 87%: 1) Address inventory shortfalls in Widget A (causing 60% of stockouts), 2) Optimize safety stock levels - currently 2 weeks, recommend 3 weeks for high-demand items, 3) Improve supplier lead time reliability, 4) Implement demand smoothing strategies. Target: 95% service level achievable in next quarter.',
+      timestamp: '2024-01-16 08:16:30'
+    },
+    {
+      type: 'user',
+      message: 'How can we reduce the inventory cost further?',
+      timestamp: '2024-01-16 08:20:00'
+    },
+    {
+      type: 'ai',
+      message: 'Current 5% inventory cost reduction is good progress. Additional opportunities: 1) ABC analysis shows 20% of SKUs account for 80% of costs - focus optimization there, 2) Implement dynamic safety stock based on demand variability, 3) Negotiate better payment terms with suppliers, 4) Consider vendor-managed inventory for slow-moving items. Potential additional 8-12% reduction possible.',
+      timestamp: '2024-01-16 08:21:45'
+    }
+  ]);
 
   const forecastData = [
     { week: 'Week 1', actual: 1200, forecast: 1150, category: 'Electronics' },
@@ -204,9 +254,47 @@ const Reporting = () => {
         {/* AI Insights */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center space-x-2 text-sm font-bold">
-              <MessageSquare className="h-5 w-5" />
-              <span>AI Insights</span>
+            <CardTitle className="flex items-center justify-between text-sm font-bold">
+              <div className="flex items-center space-x-2">
+                <MessageSquare className="h-5 w-5" />
+                <span>AI Insights</span>
+              </div>
+              <Dialog open={showChatHistory} onOpenChange={setShowChatHistory}>
+                <DialogTrigger asChild>
+                  <Button variant="ghost" size="sm">
+                    <History className="h-4 w-4" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[80vh]">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center space-x-2">
+                      <History className="h-5 w-5" />
+                      <span>Chat History</span>
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="overflow-y-auto max-h-[60vh] space-y-4 pr-2">
+                    {chatHistory.map((chat, index) => (
+                      <div key={index} className={`flex ${chat.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-[80%] rounded-lg px-4 py-2 ${
+                          chat.type === 'user' 
+                            ? 'bg-primary text-primary-foreground' 
+                            : 'bg-muted text-muted-foreground'
+                        }`}>
+                          <div className="flex items-center space-x-2 mb-1">
+                            <span className="text-xs font-medium">
+                              {chat.type === 'user' ? 'You' : 'AI Assistant'}
+                            </span>
+                            <span className="text-xs opacity-70">
+                              {chat.timestamp ? new Date(chat.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString()}
+                            </span>
+                          </div>
+                          <p className="text-sm">{chat.message}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </DialogContent>
+              </Dialog>
             </CardTitle>
             <CardDescription>
               Ask questions about your data
