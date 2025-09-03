@@ -163,112 +163,112 @@ const Prediction = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Left Column - Horizontal Sections */}
-        <div className="lg:col-span-3 space-y-6">
-          {/* Initiate Model Run - Horizontal */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2 text-sm font-bold">
-                <BarChart3 className="h-5 w-5" />
-                <span>Initiate Model Run</span>
-              </CardTitle>
-              <CardDescription>
-                Set parameters for prediction generation
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="from-date">From Date</Label>
-                  <Input
-                    id="from-date"
-                    type="date"
-                    value={fromDate}
-                    onChange={(e) => setFromDate(e.target.value)}
+      {/* Initiate Model Run - Full Width */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2 text-sm font-bold">
+            <BarChart3 className="h-5 w-5" />
+            <span>Initiate Model Run</span>
+          </CardTitle>
+          <CardDescription>
+            Set parameters for prediction generation
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="from-date">From Date</Label>
+              <Input
+                id="from-date"
+                type="date"
+                value={fromDate}
+                onChange={(e) => setFromDate(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="to-date">To Date</Label>
+              <Input
+                id="to-date"
+                type="date"
+                value={toDate}
+                onChange={(e) => setToDate(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="region">Region</Label>
+              <Select value={region} onValueChange={setRegion}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select region" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="north-america">North America</SelectItem>
+                  <SelectItem value="europe">Europe</SelectItem>
+                  <SelectItem value="asia-pacific">Asia Pacific</SelectItem>
+                  <SelectItem value="latin-america">Latin America</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Input Files</Label>
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <input 
+                    type="checkbox" 
+                    id="demand-data" 
+                    className="rounded border-border"
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedFiles([...selectedFiles, "demand_data"]);
+                      } else {
+                        setSelectedFiles(selectedFiles.filter(f => f !== "demand_data"));
+                      }
+                    }}
                   />
+                  <Label htmlFor="demand-data" className="text-xs cursor-pointer">
+                    demand_data_2024.csv
+                  </Label>
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="to-date">To Date</Label>
-                  <Input
-                    id="to-date"
-                    type="date"
-                    value={toDate}
-                    onChange={(e) => setToDate(e.target.value)}
+                <div className="flex items-center space-x-2">
+                  <input 
+                    type="checkbox" 
+                    id="inventory-levels" 
+                    className="rounded border-border"
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedFiles([...selectedFiles, "inventory_levels"]);
+                      } else {
+                        setSelectedFiles(selectedFiles.filter(f => f !== "inventory_levels"));
+                      }
+                    }}
                   />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="region">Region</Label>
-                  <Select value={region} onValueChange={setRegion}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select region" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="north-america">North America</SelectItem>
-                      <SelectItem value="europe">Europe</SelectItem>
-                      <SelectItem value="asia-pacific">Asia Pacific</SelectItem>
-                      <SelectItem value="latin-america">Latin America</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Input Files</Label>
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-2">
-                      <input 
-                        type="checkbox" 
-                        id="demand-data" 
-                        className="rounded border-border"
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedFiles([...selectedFiles, "demand_data"]);
-                          } else {
-                            setSelectedFiles(selectedFiles.filter(f => f !== "demand_data"));
-                          }
-                        }}
-                      />
-                      <Label htmlFor="demand-data" className="text-xs cursor-pointer">
-                        demand_data_2024.csv
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <input 
-                        type="checkbox" 
-                        id="inventory-levels" 
-                        className="rounded border-border"
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedFiles([...selectedFiles, "inventory_levels"]);
-                          } else {
-                            setSelectedFiles(selectedFiles.filter(f => f !== "inventory_levels"));
-                          }
-                        }}
-                      />
-                      <Label htmlFor="inventory-levels" className="text-xs cursor-pointer">
-                        inventory_levels.xlsx
-                      </Label>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-end">
-                  <Button 
-                    className="w-full bg-gradient-primary hover:opacity-90"
-                    onClick={handleGeneratePredictions}
-                  >
-                    <Play className="h-4 w-4 mr-2" />
-                    Generate Predictions
-                  </Button>
+                  <Label htmlFor="inventory-levels" className="text-xs cursor-pointer">
+                    inventory_levels.xlsx
+                  </Label>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
 
-          {/* ModEx AI Chat Interface - Horizontal */}
-          <Card className="h-[400px] flex flex-col">
+            <div className="flex items-end">
+              <Button 
+                className="w-full bg-gradient-primary hover:opacity-90"
+                onClick={handleGeneratePredictions}
+              >
+                <Play className="h-4 w-4 mr-2" />
+                Generate Predictions
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Bottom Section - ModEx AI and Model Runs Side by Side */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* ModEx AI Chat Interface */}
+        <div className="lg:col-span-2">
+          <Card className="h-[500px] flex flex-col">
             <CardHeader className="border-b bg-gradient-primary text-white rounded-t-lg">
               <CardTitle className="flex items-center space-x-2 text-sm font-bold">
                 <MessageSquare className="h-5 w-5" />
@@ -296,15 +296,15 @@ const Prediction = () => {
               </div>
 
               {/* Sample Questions */}
-              <div className="border-t p-4">
+              <div className="border-t p-4 bg-muted/50">
                 <p className="text-sm font-medium mb-3">Suggested Questions:</p>
-                <div className="grid grid-cols-4 gap-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   {sampleQuestions.map((question, index) => (
                     <Button
                       key={index}
                       variant="outline"
                       size="sm"
-                      className="text-xs h-auto py-2 px-3"
+                      className="text-xs h-auto py-2 px-3 text-left justify-start whitespace-normal"
                       onClick={() => setChatMessage(question)}
                     >
                       {question}
@@ -332,14 +332,14 @@ const Prediction = () => {
           </Card>
         </div>
 
-        {/* Right Column - Model Runs */}
+        {/* Model Runs */}
         <div className="lg:col-span-1">
-          <Card className="h-full">
+          <Card className="h-[500px]">
             <CardHeader>
               <CardTitle className="text-sm font-bold">Model Runs</CardTitle>
               <CardDescription>Track prediction generation progress</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 overflow-y-auto">
               {modelRuns.map((run) => (
                 <div key={run.id} className="border rounded-lg p-3">
                   <div className="flex items-center justify-between mb-2">
@@ -347,7 +347,10 @@ const Prediction = () => {
                     {getStatusIcon(run.status)}
                   </div>
                   <p className="text-xs text-muted-foreground mb-2">
-                    {run.dateRange} • {run.region}
+                    {run.dateRange}
+                  </p>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    {run.region}
                   </p>
                   {run.status === 'in-progress' && (
                     <Progress value={run.progress} className="mb-2" />
