@@ -131,222 +131,233 @@ const FinalizePlan = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                {/* Plan Selection & Summary */}
-                <div className="lg:col-span-1 space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center space-x-2 text-sm font-bold">
-                        <Target className="h-5 w-5" />
-                        <span>Plan Selection</span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-2">
-                        <Label>Select Run ID</Label>
-                        <Select value={selectedRun} onValueChange={setSelectedRun}>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="run_001">run_001</SelectItem>
-                            <SelectItem value="run_002">run_002</SelectItem>
-                            <SelectItem value="run_003">run_003</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+      {/* Run ID Selection */}
+      <Card className="mb-6">
+        <CardContent className="pt-6">
+          <div className="space-y-2 max-w-xs">
+            <Label>Select Run ID</Label>
+            <Select value={selectedRun} onValueChange={setSelectedRun}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="run_001">run_001</SelectItem>
+                <SelectItem value="run_002">run_002</SelectItem>
+                <SelectItem value="run_003">run_003</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
 
-                      <div className="p-4 bg-muted rounded-lg">
-                        <div className="space-y-2">
-                          <div className="flex items-center space-x-2">
-                            <Calendar className="h-4 w-4 text-muted-foreground" />
-                            <span className="text-sm">2024-01-01 to 2024-03-31</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <MapPin className="h-4 w-4 text-muted-foreground" />
-                            <span className="text-sm">North America</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-                            <span className="text-sm">Confidence: 87%</span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center space-x-2 text-sm font-bold">
-                        <MessageSquare className="h-5 w-5" />
-                        <span>AI Summary</span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {chatSummary}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* Plan Data Table */}
-                <div className="lg:col-span-3">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-sm font-bold">Supply Chain Plan</CardTitle>
-                      <CardDescription>
-                        Review and edit the model-generated plan. Click edit to modify values.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Product</TableHead>
-                            <TableHead>Forecasted Demand</TableHead>
-                            <TableHead>Planned Supply</TableHead>
-                            <TableHead>Gap</TableHead>
-                            <TableHead>Recommended Action</TableHead>
-                            <TableHead>Actions</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {planData.map((item, index) => (
-                            <TableRow key={index}>
-                              <TableCell className="font-medium">{item.product}</TableCell>
-                              <TableCell>
-                                {editingRow === index ? (
-                                  <Input 
-                                    type="number" 
-                                    defaultValue={item.demand}
-                                    className="w-20"
-                                  />
-                                ) : (
-                                  item.demand.toLocaleString()
-                                )}
-                              </TableCell>
-                              <TableCell>
-                                {editingRow === index ? (
-                                  <Input 
-                                    type="number" 
-                                    defaultValue={item.supply}
-                                    className="w-20"
-                                  />
-                                ) : (
-                                  item.supply.toLocaleString()
-                                )}
-                              </TableCell>
-                              <TableCell>
-                                <span className={item.gap < 0 ? 'text-destructive' : 'text-success'}>
-                                  {item.gap > 0 ? '+' : ''}{item.gap}
-                                </span>
-                              </TableCell>
-                              <TableCell>
-                                {editingRow === index ? (
-                                  <Input 
-                                    defaultValue={item.action}
-                                    className="w-32"
-                                  />
-                                ) : (
-                                  item.action
-                                )}
-                              </TableCell>
-                              <TableCell>
-                                {editingRow === index ? (
-                                  <div className="space-y-2">
-                                    <Textarea
-                                      placeholder="Reason for editing..."
-                                      value={editReason}
-                                      onChange={(e) => setEditReason(e.target.value)}
-                                      className="w-48 h-16"
-                                    />
-                                    <div className="flex space-x-2">
-                                      <Button 
-                                        size="sm" 
-                                        onClick={() => handleSaveEdit(index)}
-                                      >
-                                        <Save className="h-3 w-3 mr-1" />
-                                        Save
-                                      </Button>
-                                      <Button 
-                                        size="sm" 
-                                        variant="outline" 
-                                        onClick={() => setEditingRow(null)}
-                                      >
-                                        Cancel
-                                      </Button>
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <Button 
-                                    variant="ghost" 
-                                    size="sm" 
-                                    onClick={() => handleEdit(index)}
-                                  >
-                                    <Edit3 className="h-4 w-4" />
-                                  </Button>
-                                )}
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-
-                      <div className="mt-6 pt-6 border-t">
-                        <div className="flex space-x-4">
-                          <Button 
-                            className="bg-gradient-primary hover:opacity-90"
-                            onClick={handleFinalizePlan}
-                          >
-                            <CheckCircle className="h-4 w-4 mr-2" />
-                            Finalize Plan
-                          </Button>
-                          <Button variant="outline">
-                            <Download className="h-4 w-4 mr-2" />
-                            Download CSV
-                          </Button>
-                          <Button variant="outline">
-                            <FileText className="h-4 w-4 mr-2" />
-                            Download PDF
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Finalized Plans History */}
-                  <Card className="mt-6">
-                    <CardHeader>
-                      <CardTitle className="text-sm font-bold">Finalized Plans</CardTitle>
-                      <CardDescription>History of all finalized supply chain plans</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        {finalizedPlans.map((plan) => (
-                          <div key={plan.id} className="flex items-center justify-between p-4 border rounded-lg">
-                            <div>
-                              <h4 className="font-medium">{plan.id}</h4>
-                              <p className="text-sm text-muted-foreground">
-                                {plan.dateRange} • {plan.region} • {plan.runId}
-                              </p>
-                              <p className="text-xs text-muted-foreground">Created: {plan.createdAt}</p>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <span className="text-xs px-2 py-1 bg-success/10 text-success rounded">
-                                {plan.status}
-                              </span>
-                              <Button variant="ghost" size="sm">
-                                <Download className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                   </Card>
+      {/* Run Details and ModEx AI Summary - Horizontal */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2 text-sm font-bold">
+              <Target className="h-5 w-5" />
+              <span>Run Details</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="flex items-center space-x-2">
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <div>
+                  <p className="text-xs text-muted-foreground">Date Range</p>
+                  <p className="text-sm font-medium">2024-01-01 to 2024-03-31</p>
                 </div>
               </div>
+              <div className="flex items-center space-x-2">
+                <MapPin className="h-4 w-4 text-muted-foreground" />
+                <div>
+                  <p className="text-xs text-muted-foreground">Region</p>
+                  <p className="text-sm font-medium">North America</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                <div>
+                  <p className="text-xs text-muted-foreground">Confidence</p>
+                  <p className="text-sm font-medium">87%</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2 text-sm font-bold">
+              <MessageSquare className="h-5 w-5" />
+              <span>ModEx AI Summary</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {chatSummary}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Output File Display */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2 text-sm font-bold">
+            <FileText className="h-5 w-5" />
+            <span>Supply Chain Plan</span>
+          </CardTitle>
+          <CardDescription>
+            Review and edit the model-generated plan. Click edit to modify values.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Product</TableHead>
+                <TableHead>Forecasted Demand</TableHead>
+                <TableHead>Planned Supply</TableHead>
+                <TableHead>Gap</TableHead>
+                <TableHead>Recommended Action</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {planData.map((item, index) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium">{item.product}</TableCell>
+                  <TableCell>
+                    {editingRow === index ? (
+                      <Input 
+                        type="number" 
+                        defaultValue={item.demand}
+                        className="w-20"
+                      />
+                    ) : (
+                      item.demand.toLocaleString()
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {editingRow === index ? (
+                      <Input 
+                        type="number" 
+                        defaultValue={item.supply}
+                        className="w-20"
+                      />
+                    ) : (
+                      item.supply.toLocaleString()
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <span className={item.gap < 0 ? 'text-destructive' : 'text-success'}>
+                      {item.gap > 0 ? '+' : ''}{item.gap}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    {editingRow === index ? (
+                      <Input 
+                        defaultValue={item.action}
+                        className="w-32"
+                      />
+                    ) : (
+                      item.action
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {editingRow === index ? (
+                      <div className="space-y-2">
+                        <Textarea
+                          placeholder="Reason for editing..."
+                          value={editReason}
+                          onChange={(e) => setEditReason(e.target.value)}
+                          className="w-48 h-16"
+                        />
+                        <div className="flex space-x-2">
+                          <Button 
+                            size="sm" 
+                            onClick={() => handleSaveEdit(index)}
+                          >
+                            <Save className="h-3 w-3 mr-1" />
+                            Save
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            onClick={() => setEditingRow(null)}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => handleEdit(index)}
+                      >
+                        <Edit3 className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+
+          <div className="mt-6 pt-6 border-t">
+            <div className="flex space-x-4">
+              <Button 
+                className="bg-gradient-primary hover:opacity-90"
+                onClick={handleFinalizePlan}
+              >
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Finalize Plan
+              </Button>
+              <Button variant="outline">
+                <Download className="h-4 w-4 mr-2" />
+                Download CSV
+              </Button>
+              <Button variant="outline">
+                <FileText className="h-4 w-4 mr-2" />
+                Download PDF
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Finalized Plans Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm font-bold">Finalized Plans</CardTitle>
+          <CardDescription>History of all finalized supply chain plans</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {finalizedPlans.map((plan) => (
+              <div key={plan.id} className="flex items-center justify-between p-4 border rounded-lg">
+                <div>
+                  <h4 className="font-medium">{plan.id}</h4>
+                  <p className="text-sm text-muted-foreground">
+                    {plan.dateRange} • {plan.region} • {plan.runId}
+                  </p>
+                  <p className="text-xs text-muted-foreground">Created: {plan.createdAt}</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs px-2 py-1 bg-success/10 text-success rounded">
+                    {plan.status}
+                  </span>
+                  <Button variant="ghost" size="sm">
+                    <Download className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </>
   );
 };
