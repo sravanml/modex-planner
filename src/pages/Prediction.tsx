@@ -170,7 +170,7 @@ const Prediction = () => {
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-2 text-sm font-bold">
                         <BarChart3 className="h-5 w-5" />
-                        <span>Model Configuration</span>
+                        <span>Initiate Model Run</span>
                       </CardTitle>
                       <CardDescription>
                         Set parameters for prediction generation
@@ -214,15 +214,42 @@ const Prediction = () => {
 
                       <div className="space-y-2">
                         <Label>Input Files</Label>
-                        <Select>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select files" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="demand_data">demand_data_2024.csv</SelectItem>
-                            <SelectItem value="inventory_levels">inventory_levels.xlsx</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <div className="space-y-2">
+                          <div className="flex items-center space-x-2">
+                            <input 
+                              type="checkbox" 
+                              id="demand-data" 
+                              className="rounded border-border"
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSelectedFiles([...selectedFiles, "demand_data"]);
+                                } else {
+                                  setSelectedFiles(selectedFiles.filter(f => f !== "demand_data"));
+                                }
+                              }}
+                            />
+                            <Label htmlFor="demand-data" className="text-sm cursor-pointer">
+                              demand_data_2024.csv
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <input 
+                              type="checkbox" 
+                              id="inventory-levels" 
+                              className="rounded border-border"
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSelectedFiles([...selectedFiles, "inventory_levels"]);
+                                } else {
+                                  setSelectedFiles(selectedFiles.filter(f => f !== "inventory_levels"));
+                                }
+                              }}
+                            />
+                            <Label htmlFor="inventory-levels" className="text-sm cursor-pointer">
+                              inventory_levels.xlsx
+                            </Label>
+                          </div>
+                        </div>
                       </div>
 
                       <Button 
