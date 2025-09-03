@@ -344,33 +344,15 @@ const Prediction = () => {
                   <MessageSquare className="h-5 w-5" />
                   <span>ModEx AI - Your Supply Chain Assistant</span>
                 </div>
-                <Popover open={showChatHistory} onOpenChange={setShowChatHistory}>
-                  <PopoverTrigger asChild>
-                    <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
-                      <History className="h-4 w-4" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent align="end" className="w-80 max-h-72 overflow-y-auto p-0">
-                    <div className="p-3 border-b font-medium text-sm flex items-center space-x-2">
-                      <History className="h-4 w-4" />
-                      <span>Chat History</span>
-                    </div>
-                    <div className="p-2 space-y-2">
-                      {chatSessions.map((session) => (
-                        <div
-                          key={session.id}
-                          className="p-3 border rounded-lg hover:bg-muted cursor-pointer transition-colors"
-                        >
-                          <h4 className="font-medium text-sm mb-1">{session.name}</h4>
-                          <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
-                            {session.lastMessage}
-                          </p>
-                          <span className="text-xs text-muted-foreground">{session.timestamp}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-white hover:bg-white/10"
+                  onClick={() => setShowChatHistory((v) => !v)}
+                  aria-label="Toggle chat history"
+                >
+                  <History className="h-4 w-4" />
+                </Button>
               </CardTitle>
               <CardDescription className="text-white/80">
                 Ask questions about your predictions and get intelligent insights
@@ -378,6 +360,19 @@ const Prediction = () => {
             </CardHeader>
             
             <CardContent className="flex-1 flex flex-col p-0">
+              {showChatHistory && (
+                <div className="border-b bg-muted/40 p-3 max-h-40 overflow-y-auto">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {chatSessions.map((session) => (
+                      <div key={session.id} className="p-3 border rounded-lg hover:bg-muted cursor-pointer transition-colors">
+                        <h4 className="font-medium text-sm mb-1">{session.name}</h4>
+                        <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{session.lastMessage}</p>
+                        <span className="text-xs text-muted-foreground">{session.timestamp}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               {/* Chat Messages */}
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {chatHistory.map((chat, index) => (
