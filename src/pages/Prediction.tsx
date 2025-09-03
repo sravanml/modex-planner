@@ -6,7 +6,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import Navbar from "@/components/Layout/Navbar";
+import { PlanningModulesSidebar } from "@/components/Layout/PlanningModulesSidebar";
 import { 
   Play, 
   Calendar, 
@@ -32,6 +34,7 @@ interface ModelRun {
 }
 
 const Prediction = () => {
+  const [selectedModule, setSelectedModule] = useState("planning-forecasting");
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
@@ -64,6 +67,16 @@ const Prediction = () => {
   ]);
 
   const { toast } = useToast();
+
+  const handleModuleSelect = (moduleId: string, subModule?: string) => {
+    setSelectedModule(moduleId);
+    if (subModule) {
+      toast({
+        title: "Module Selected",
+        description: `Switched to ${subModule}`,
+      });
+    }
+  };
 
   const handleGeneratePredictions = () => {
     if (!fromDate || !toDate || !region) {
@@ -159,186 +172,196 @@ const Prediction = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Prediction & Output Analysis</h1>
-          <p className="text-muted-foreground">
-            Generate ML-powered predictions and analyze results with ModEx AI
-          </p>
-        </div>
+      <SidebarProvider>
+        <div className="flex min-h-screen w-full">
+          <PlanningModulesSidebar 
+            selectedModule={selectedModule}
+            onModuleSelect={handleModuleSelect}
+          />
+          
+          <main className="flex-1">
+            <div className="max-w-6xl mx-auto px-4 py-8">
+              <div className="mb-8">
+                <h1 className="text-3xl font-bold mb-2">Prediction & Output Analysis</h1>
+                <p className="text-muted-foreground">
+                  Generate ML-powered predictions and analyze results with ModEx AI
+                </p>
+              </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Model Configuration */}
-          <div className="lg:col-span-1 space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <BarChart3 className="h-5 w-5" />
-                  <span>Model Configuration</span>
-                </CardTitle>
-                <CardDescription>
-                  Set parameters for prediction generation
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="from-date">From Date</Label>
-                  <Input
-                    id="from-date"
-                    type="date"
-                    value={fromDate}
-                    onChange={(e) => setFromDate(e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="to-date">To Date</Label>
-                  <Input
-                    id="to-date"
-                    type="date"
-                    value={toDate}
-                    onChange={(e) => setToDate(e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="region">Region</Label>
-                  <Select value={region} onValueChange={setRegion}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select region" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="north-america">North America</SelectItem>
-                      <SelectItem value="europe">Europe</SelectItem>
-                      <SelectItem value="asia-pacific">Asia Pacific</SelectItem>
-                      <SelectItem value="latin-america">Latin America</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Input Files</Label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select files" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="demand_data">demand_data_2024.csv</SelectItem>
-                      <SelectItem value="inventory_levels">inventory_levels.xlsx</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <Button 
-                  className="w-full bg-gradient-primary hover:opacity-90"
-                  onClick={handleGeneratePredictions}
-                >
-                  <Play className="h-4 w-4 mr-2" />
-                  Generate Predictions
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Model Runs */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Model Runs</CardTitle>
-                <CardDescription>Track prediction generation progress</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {modelRuns.map((run) => (
-                  <div key={run.id} className="border rounded-lg p-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-medium text-sm">{run.id}</span>
-                      {getStatusIcon(run.status)}
-                    </div>
-                    <p className="text-xs text-muted-foreground mb-2">
-                      {run.dateRange} • {run.region}
-                    </p>
-                    {run.status === 'in-progress' && (
-                      <Progress value={run.progress} className="mb-2" />
-                    )}
-                    <div className="flex space-x-2">
-                      <Button variant="ghost" size="sm">
-                        <Download className="h-3 w-3" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <FileText className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* ModEx AI Chat Interface */}
-          <div className="lg:col-span-2">
-            <Card className="h-[600px] flex flex-col">
-              <CardHeader className="border-b bg-gradient-primary text-white rounded-t-lg">
-                <CardTitle className="flex items-center space-x-2">
-                  <MessageSquare className="h-5 w-5" />
-                  <span>ModEx AI - Your Supply Chain Assistant</span>
-                </CardTitle>
-                <CardDescription className="text-white/80">
-                  Ask questions about your predictions and get intelligent insights
-                </CardDescription>
-              </CardHeader>
-              
-              <CardContent className="flex-1 flex flex-col p-0">
-                {/* Chat History */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                  {chatHistory.map((chat, index) => (
-                    <div key={index} className={`flex ${chat.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                        chat.type === 'user' 
-                          ? 'bg-primary text-primary-foreground' 
-                          : 'bg-muted text-muted-foreground'
-                      }`}>
-                        <p className="text-sm">{chat.message}</p>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Upload Section */}
+                <div className="lg:col-span-1 space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-2">
+                        <BarChart3 className="h-5 w-5" />
+                        <span>Model Configuration</span>
+                      </CardTitle>
+                      <CardDescription>
+                        Set parameters for prediction generation
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="from-date">From Date</Label>
+                        <Input
+                          id="from-date"
+                          type="date"
+                          value={fromDate}
+                          onChange={(e) => setFromDate(e.target.value)}
+                        />
                       </div>
-                    </div>
-                  ))}
-                </div>
 
-                {/* Sample Questions */}
-                <div className="border-t p-4">
-                  <p className="text-sm font-medium mb-3">Suggested Questions:</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {sampleQuestions.map((question, index) => (
-                      <Button
-                        key={index}
-                        variant="outline"
-                        size="sm"
-                        className="text-xs h-auto py-2 px-3"
-                        onClick={() => setChatMessage(question)}
+                      <div className="space-y-2">
+                        <Label htmlFor="to-date">To Date</Label>
+                        <Input
+                          id="to-date"
+                          type="date"
+                          value={toDate}
+                          onChange={(e) => setToDate(e.target.value)}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="region">Region</Label>
+                        <Select value={region} onValueChange={setRegion}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select region" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="north-america">North America</SelectItem>
+                            <SelectItem value="europe">Europe</SelectItem>
+                            <SelectItem value="asia-pacific">Asia Pacific</SelectItem>
+                            <SelectItem value="latin-america">Latin America</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Input Files</Label>
+                        <Select>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select files" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="demand_data">demand_data_2024.csv</SelectItem>
+                            <SelectItem value="inventory_levels">inventory_levels.xlsx</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <Button 
+                        className="w-full bg-gradient-primary hover:opacity-90"
+                        onClick={handleGeneratePredictions}
                       >
-                        {question}
+                        <Play className="h-4 w-4 mr-2" />
+                        Generate Predictions
                       </Button>
-                    ))}
-                  </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Model Runs */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Model Runs</CardTitle>
+                      <CardDescription>Track prediction generation progress</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {modelRuns.map((run) => (
+                        <div key={run.id} className="border rounded-lg p-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="font-medium text-sm">{run.id}</span>
+                            {getStatusIcon(run.status)}
+                          </div>
+                          <p className="text-xs text-muted-foreground mb-2">
+                            {run.dateRange} • {run.region}
+                          </p>
+                          {run.status === 'in-progress' && (
+                            <Progress value={run.progress} className="mb-2" />
+                          )}
+                          <div className="flex space-x-2">
+                            <Button variant="ghost" size="sm">
+                              <Download className="h-3 w-3" />
+                            </Button>
+                            <Button variant="ghost" size="sm">
+                              <FileText className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </CardContent>
+                  </Card>
                 </div>
 
-                {/* Chat Input */}
-                <div className="border-t p-4">
-                  <div className="flex space-x-2">
-                    <Textarea
-                      placeholder="Ask ModEx AI about your predictions..."
-                      value={chatMessage}
-                      onChange={(e) => setChatMessage(e.target.value)}
-                      className="resize-none"
-                      rows={2}
-                    />
-                    <Button onClick={handleSendMessage} className="self-end">
-                      <Send className="h-4 w-4" />
-                    </Button>
-                  </div>
+                {/* ModEx AI Chat Interface */}
+                <div className="lg:col-span-2">
+                  <Card className="h-[600px] flex flex-col">
+                    <CardHeader className="border-b bg-gradient-primary text-white rounded-t-lg">
+                      <CardTitle className="flex items-center space-x-2">
+                        <MessageSquare className="h-5 w-5" />
+                        <span>ModEx AI - Your Supply Chain Assistant</span>
+                      </CardTitle>
+                      <CardDescription className="text-white/80">
+                        Ask questions about your predictions and get intelligent insights
+                      </CardDescription>
+                    </CardHeader>
+                    
+                    <CardContent className="flex-1 flex flex-col p-0">
+                      {/* Chat History */}
+                      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                        {chatHistory.map((chat, index) => (
+                          <div key={index} className={`flex ${chat.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                            <div className={`max-w-[80%] rounded-lg px-4 py-2 ${
+                              chat.type === 'user' 
+                                ? 'bg-primary text-primary-foreground' 
+                                : 'bg-muted text-muted-foreground'
+                            }`}>
+                              <p className="text-sm">{chat.message}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Sample Questions */}
+                      <div className="border-t p-4">
+                        <p className="text-sm font-medium mb-3">Suggested Questions:</p>
+                        <div className="grid grid-cols-2 gap-2">
+                          {sampleQuestions.map((question, index) => (
+                            <Button
+                              key={index}
+                              variant="outline"
+                              size="sm"
+                              className="text-xs h-auto py-2 px-3"
+                              onClick={() => setChatMessage(question)}
+                            >
+                              {question}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Chat Input */}
+                      <div className="border-t p-4">
+                        <div className="flex space-x-2">
+                          <Textarea
+                            placeholder="Ask ModEx AI about your predictions..."
+                            value={chatMessage}
+                            onChange={(e) => setChatMessage(e.target.value)}
+                            className="resize-none"
+                            rows={2}
+                          />
+                          <Button onClick={handleSendMessage} className="self-end">
+                            <Send className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+            </div>
+          </main>
         </div>
-      </div>
+      </SidebarProvider>
     </div>
   );
 };

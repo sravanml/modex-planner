@@ -3,7 +3,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import Navbar from "@/components/Layout/Navbar";
+import { PlanningModulesSidebar } from "@/components/Layout/PlanningModulesSidebar";
 import { 
   Upload, 
   FileSpreadsheet, 
@@ -26,6 +28,7 @@ interface UploadedFile {
 }
 
 const DataInput = () => {
+  const [selectedModule, setSelectedModule] = useState("planning-forecasting");
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([
     {
       id: '1',
@@ -46,6 +49,16 @@ const DataInput = () => {
   ]);
   
   const { toast } = useToast();
+
+  const handleModuleSelect = (moduleId: string, subModule?: string) => {
+    setSelectedModule(moduleId);
+    if (subModule) {
+      toast({
+        title: "Module Selected",
+        description: `Switched to ${subModule}`,
+      });
+    }
+  };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -106,124 +119,135 @@ const DataInput = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Data Input Management</h1>
-          <p className="text-muted-foreground">
-            Upload and manage your supply chain data files for analysis and planning
-          </p>
-        </div>
+      <SidebarProvider>
+        <div className="flex min-h-screen w-full">
+          <PlanningModulesSidebar 
+            selectedModule={selectedModule}
+            onModuleSelect={handleModuleSelect}
+          />
+          
+          <main className="flex-1">
+            <div className="max-w-6xl mx-auto px-4 py-8">
+              <div className="mb-8">
+                <h1 className="text-3xl font-bold mb-2">Data Input Management</h1>
+                <p className="text-muted-foreground">
+                  Upload and manage your supply chain data files for analysis and planning
+                </p>
+              </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Upload Section */}
-          <div className="lg:col-span-1">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Upload className="h-5 w-5" />
-                  <span>Upload Files</span>
-                </CardTitle>
-                <CardDescription>
-                  Supported formats: CSV, Excel, PDF, Word documents
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary transition-colors">
-                  <Upload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <Label htmlFor="file-upload" className="cursor-pointer">
-                    <span className="text-sm font-medium text-primary hover:underline">
-                      Click to upload files
-                    </span>
-                    <span className="text-sm text-muted-foreground block mt-1">
-                      or drag and drop
-                    </span>
-                  </Label>
-                  <Input
-                    id="file-upload"
-                    type="file"
-                    multiple
-                    accept=".csv,.xlsx,.xls,.pdf,.doc,.docx"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                  />
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Upload Section */}
+                <div className="lg:col-span-1">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-2">
+                        <Upload className="h-5 w-5" />
+                        <span>Upload Files</span>
+                      </CardTitle>
+                      <CardDescription>
+                        Supported formats: CSV, Excel, PDF, Word documents
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary transition-colors">
+                        <Upload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                        <Label htmlFor="file-upload" className="cursor-pointer">
+                          <span className="text-sm font-medium text-primary hover:underline">
+                            Click to upload files
+                          </span>
+                          <span className="text-sm text-muted-foreground block mt-1">
+                            or drag and drop
+                          </span>
+                        </Label>
+                        <Input
+                          id="file-upload"
+                          type="file"
+                          multiple
+                          accept=".csv,.xlsx,.xls,.pdf,.doc,.docx"
+                          onChange={handleFileUpload}
+                          className="hidden"
+                        />
+                      </div>
+                      
+                      <div className="text-xs text-muted-foreground space-y-1">
+                        <p>• Maximum file size: 10MB</p>
+                        <p>• Supports multiple file upload</p>
+                        <p>• Data will be validated automatically</p>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
-                
-                <div className="text-xs text-muted-foreground space-y-1">
-                  <p>• Maximum file size: 10MB</p>
-                  <p>• Supports multiple file upload</p>
-                  <p>• Data will be validated automatically</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
 
-          {/* File Management Section */}
-          <div className="lg:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Uploaded Files</CardTitle>
-                <CardDescription>
-                  Manage your uploaded data files and preview content
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {uploadedFiles.length === 0 ? (
-                  <div className="text-center py-12">
-                    <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">No files uploaded yet</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {uploadedFiles.map((file) => (
-                      <div key={file.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
-                        <div className="flex items-center space-x-4">
-                          {getFileIcon(file.type)}
-                          <div>
-                            <h4 className="font-medium">{file.name}</h4>
-                            <p className="text-sm text-muted-foreground">
-                              {file.type} • {file.size} • Uploaded {file.uploadDate}
-                            </p>
+                {/* File Management Section */}
+                <div className="lg:col-span-2">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Uploaded Files</CardTitle>
+                      <CardDescription>
+                        Manage your uploaded data files and preview content
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      {uploadedFiles.length === 0 ? (
+                        <div className="text-center py-12">
+                          <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                          <p className="text-muted-foreground">No files uploaded yet</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          {uploadedFiles.map((file) => (
+                            <div key={file.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+                              <div className="flex items-center space-x-4">
+                                {getFileIcon(file.type)}
+                                <div>
+                                  <h4 className="font-medium">{file.name}</h4>
+                                  <p className="text-sm text-muted-foreground">
+                                    {file.type} • {file.size} • Uploaded {file.uploadDate}
+                                  </p>
+                                </div>
+                              </div>
+                              
+                              <div className="flex items-center space-x-2">
+                                {getStatusIcon(file.status)}
+                                <Button variant="ghost" size="sm">
+                                  <Eye className="h-4 w-4" />
+                                </Button>
+                                <Button variant="ghost" size="sm">
+                                  <Download className="h-4 w-4" />
+                                </Button>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  onClick={() => handleDeleteFile(file.id)}
+                                >
+                                  <Trash2 className="h-4 w-4 text-destructive" />
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      
+                      {uploadedFiles.length > 0 && (
+                        <div className="mt-6 pt-6 border-t">
+                          <div className="flex space-x-4">
+                            <Button className="bg-gradient-primary hover:opacity-90">
+                              Save Changes
+                            </Button>
+                            <Button variant="outline">
+                              Download All Files
+                            </Button>
                           </div>
                         </div>
-                        
-                        <div className="flex items-center space-x-2">
-                          {getStatusIcon(file.status)}
-                          <Button variant="ghost" size="sm">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="sm">
-                            <Download className="h-4 w-4" />
-                          </Button>
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => handleDeleteFile(file.id)}
-                          >
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                
-                {uploadedFiles.length > 0 && (
-                  <div className="mt-6 pt-6 border-t">
-                    <div className="flex space-x-4">
-                      <Button className="bg-gradient-primary hover:opacity-90">
-                        Save Changes
-                      </Button>
-                      <Button variant="outline">
-                        Download All Files
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            </div>
+          </main>
         </div>
-      </div>
+      </SidebarProvider>
     </div>
   );
 };
