@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { useNavigate, useLocation } from "react-router-dom";
 import { 
   Upload, 
@@ -57,42 +56,80 @@ export function WorkflowNavigation({ moduleId, subModuleId, currentStep }: Workf
     return location.pathname.includes(stepPath);
   };
 
+  // Component for circular progress indicator
+  const CircularProgress = ({ progress, isActive }: { progress: number; isActive: boolean }) => {
+    const radius = 20;
+    const circumference = 2 * Math.PI * radius;
+    const strokeDasharray = circumference;
+    const strokeDashoffset = circumference - (progress / 100) * circumference;
+
+    return (
+      <div className="relative">
+        <svg width="48" height="48" className="transform -rotate-90">
+          {/* Background circle */}
+          <circle
+            cx="24"
+            cy="24"
+            r={radius}
+            stroke="currentColor"
+            strokeWidth="4"
+            fill="none"
+            className="text-muted-foreground/30"
+          />
+          {/* Progress circle */}
+          <circle
+            cx="24"
+            cy="24"
+            r={radius}
+            stroke="currentColor"
+            strokeWidth="4"
+            fill="none"
+            strokeDasharray={strokeDasharray}
+            strokeDashoffset={strokeDashoffset}
+            className={isActive ? "text-primary-foreground" : "text-primary"}
+            strokeLinecap="round"
+          />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-xs font-medium">{progress}%</span>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Card className="p-4 mb-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold">Workflow Stages</h3>
+        <h3 className="text-sm font-bold">Workflow Stages</h3>
         <div className="text-sm text-muted-foreground">
           Track progress through each planning stage
         </div>
       </div>
       
-      <div className="grid grid-cols-5 gap-3">
+      <div className="flex items-center justify-between gap-4">
         {workflowSteps.map((step, index) => {
           const IconComponent = step.icon;
           const progress = getStepProgress(step.id);
           const isActive = isCurrentStep(step.path);
           
           return (
-            <Button
-              key={step.id}
-              variant={isActive ? "default" : "outline"}
-              className="h-auto p-4 flex flex-col items-center space-y-2 relative"
-              onClick={() => handleStepClick(step.path)}
-            >
-              <div className="flex items-center space-x-2">
-                <IconComponent className="h-4 w-4" />
-                <span className="text-sm font-medium">{step.name}</span>
-              </div>
-              
-              <div className="w-full">
-                <Progress value={progress} className="h-2" />
-                <span className="text-xs text-muted-foreground mt-1">{progress}%</span>
-              </div>
+            <div key={step.id} className="flex items-center">
+              <Button
+                variant="ghost"
+                className="flex flex-col items-center space-y-2 p-2 h-auto"
+                onClick={() => handleStepClick(step.path)}
+              >
+                <CircularProgress progress={progress} isActive={isActive} />
+                <div className="flex flex-col items-center space-y-1">
+                  <IconComponent className="h-3 w-3" />
+                  <span className="text-xs font-medium text-center leading-tight">{step.name}</span>
+                </div>
+              </Button>
               
               {index < workflowSteps.length - 1 && (
-                <div className="hidden lg:block absolute -right-1.5 top-1/2 transform -translate-y-1/2 w-3 h-0.5 bg-border"></div>
+                <div className="w-8 h-0.5 bg-border mx-2"></div>
               )}
-            </Button>
+            </div>
           );
         })}
       </div>
