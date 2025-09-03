@@ -132,23 +132,21 @@ const FinalizePlan = () => {
       </div>
 
       {/* Run ID Selection */}
-      <Card className="mb-6">
-        <CardContent className="pt-6">
-          <div className="space-y-2 max-w-xs">
-            <Label>Select Run ID</Label>
-            <Select value={selectedRun} onValueChange={setSelectedRun}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="run_001">run_001</SelectItem>
-                <SelectItem value="run_002">run_002</SelectItem>
-                <SelectItem value="run_003">run_003</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="mb-6">
+        <div className="space-y-2 max-w-xs">
+          <Label>Select Run ID</Label>
+          <Select value={selectedRun} onValueChange={setSelectedRun}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="run_001">run_001</SelectItem>
+              <SelectItem value="run_002">run_002</SelectItem>
+              <SelectItem value="run_003">run_003</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
 
       {/* Run Details and ModEx AI Summary - Horizontal */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
@@ -206,7 +204,7 @@ const FinalizePlan = () => {
         <CardHeader>
           <CardTitle className="flex items-center space-x-2 text-sm font-bold">
             <FileText className="h-5 w-5" />
-            <span>Supply Chain Plan</span>
+            <span>Model Output</span>
           </CardTitle>
           <CardDescription>
             Review and edit the model-generated plan. Click edit to modify values.
