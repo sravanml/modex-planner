@@ -99,7 +99,7 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          {!isCollapsed && <SidebarGroupLabel>Planning Modules</SidebarGroupLabel>}
+          {!isCollapsed && <SidebarGroupLabel className="text-base font-semibold">Planning Modules</SidebarGroupLabel>}
           
           <SidebarGroupContent>
             <SidebarMenu>
