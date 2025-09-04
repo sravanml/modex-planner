@@ -5,6 +5,7 @@ import {
   parseFileToJSON,
   uploadFileToBackend,
   fetchUploadedData,
+  downloadSingleFileAsExcel,
 } from "./helpers";
 
 // Supabase client
@@ -80,6 +81,7 @@ const DataUploader = () => {
                 <th>Filename</th>
                 <th>Uploaded At</th>
                 <th>Data (first row)</th>
+                <th>Download</th>
               </tr>
             </thead>
             <tbody>
@@ -92,6 +94,11 @@ const DataUploader = () => {
                     {rec.data && rec.data.length > 0
                       ? JSON.stringify(rec.data[0])
                       : "No data"}
+                  </td>
+                  <td>
+                    <button onClick={() => downloadSingleFileAsExcel(rec)}>
+                      Download
+                    </button>
                   </td>
                 </tr>
               ))}
