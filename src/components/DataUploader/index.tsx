@@ -10,16 +10,18 @@ const DataUploader = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [records, setRecords] = useState<any[]>([]);
 
-  // Replace with logged-in user's id (later from Supabase Auth)
+  // For now, hardcoded user & run IDs
   const userId = "test-user-123";
   const runId = "run-001";
 
+  // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFiles([...files, ...Array.from(e.target.files)]);
     }
   };
 
+  // Parse file into JSON
   const parseFileToJSON = (file: File): Promise<any[]> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -40,6 +42,7 @@ const DataUploader = () => {
     });
   };
 
+  // Upload files to FastAPI backend
   const handleSaveChanges = async () => {
     for (const file of files) {
       const jsonData = await parseFileToJSON(file);
@@ -63,6 +66,7 @@ const DataUploader = () => {
     alert("Files saved to Supabase!");
   };
 
+  // Fetch data back from backend
   const handleFetchData = async () => {
     const response = await fetch(
       `http://127.0.0.1:8000/get-data?user_id=${userId}&run_id=${runId}`

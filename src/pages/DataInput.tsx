@@ -1,83 +1,147 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { 
-  Upload, 
-  FileSpreadsheet, 
-  FileText, 
-  Download, 
-  Eye, 
+import {
+  Upload,
+  FileSpreadsheet,
+  FileText,
+  Download,
+  Eye,
   Trash2,
   CheckCircle,
   AlertCircle,
-  Edit3
+  Edit3,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface UploadedFile {
   id: string;
+  file: File | null; // null if fetched from backend
   name: string;
   type: string;
   size: string;
   uploadDate: string;
-  status: 'uploaded' | 'processing' | 'ready';
+  status: "uploaded" | "processing" | "ready";
+  fileUrl?: string; // from backend
 }
 
 const DataInput = () => {
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([
-    {
-      id: '1',
-      name: 'demand_data_2024.csv',
-      type: 'CSV',
-      size: '2.4 MB',
-      uploadDate: '2024-01-15',
-      status: 'ready'
-    },
-    {
-      id: '2', 
-      name: 'inventory_levels.xlsx',
-      type: 'Excel',
-      size: '1.8 MB',
-      uploadDate: '2024-01-14',
-      status: 'ready'
-    }
-  ]);
-  
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const { toast } = useToast();
 
+  // ✅ Hardcoded for milestone 1
+  const userId = "test-user-123";
+  const runId = "run-001";
+
+  // Handle file selection
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
-      Array.from(files).forEach(file => {
+      Array.from(files).forEach((file) => {
         const newFile: UploadedFile = {
           id: Date.now().toString() + Math.random().toString(),
+          file,
           name: file.name,
-          type: file.name.split('.').pop()?.toUpperCase() || 'Unknown',
+          type: file.name.split(".").pop()?.toUpperCase() || "Unknown",
           size: `${(file.size / 1024 / 1024).toFixed(1)} MB`,
-          uploadDate: new Date().toISOString().split('T')[0],
-          status: 'processing'
+          uploadDate: new Date().toISOString().split("T")[0],
+          status: "processing",
         };
-        
-        setUploadedFiles(prev => [...prev, newFile]);
-        
-        // Simulate file processing
+
+        setUploadedFiles((prev) => [...prev, newFile]);
+
         setTimeout(() => {
-          setUploadedFiles(prev => 
-            prev.map(f => f.id === newFile.id ? { ...f, status: 'ready' } : f)
+          setUploadedFiles((prev) =>
+            prev.map((f) =>
+              f.id === newFile.id ? { ...f, status: "ready" } : f
+            )
           );
           toast({
-            title: "File uploaded successfully",
-            description: `${file.name} is ready for processing`,
+            title: "File ready",
+            description: `${file.name} is ready to be saved.`,
           });
-        }, 2000);
+        }, 1000);
       });
     }
   };
 
+  // Upload to FastAPI backend
+  const handleSaveChanges = async () => {
+    for (const file of uploadedFiles) {
+      if (file.status !== "ready" || !file.file) continue;
+
+      try {
+        const formData = new FormData();
+        formData.append("user_id", userId);
+        formData.append("run_id", runId);
+        formData.append("file", file.file);
+
+        const response = await fetch("http://127.0.0.1:8000/upload-file", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) throw new Error(`Upload failed: ${response.status}`);
+        const result = await response.json();
+        console.log("Upload response:", result);
+
+        setUploadedFiles((prev) =>
+          prev.map((f) =>
+            f.id === file.id
+              ? { ...f, status: "uploaded", fileUrl: result.file_url }
+              : f
+          )
+        );
+
+        toast({
+          title: "Saved to Supabase",
+          description: `${file.name} uploaded successfully.`,
+        });
+      } catch (err) {
+        console.error("Error uploading file:", err);
+        toast({
+          title: "Upload failed",
+          description: `${file.name} could not be saved.`,
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  // Fetch already uploaded files from backend
+  useEffect(() => {
+    const fetchFiles = async () => {
+      try {
+        const res = await fetch(
+          `http://127.0.0.1:8000/get-data?user_id=${userId}&run_id=${runId}`
+        );
+        if (!res.ok) throw new Error("Failed to fetch files");
+        const data = await res.json();
+
+        const mapped = data.records.map((row: any) => ({
+          id: row.id?.toString() || row.filename,
+          file: null,
+          name: row.filename,
+          type: row.filename.split(".").pop()?.toUpperCase() || "Unknown",
+          size: `${(row.file_size / 1024 / 1024).toFixed(1)} MB`,
+          uploadDate: row.uploaded_at?.split("T")[0],
+          status: "uploaded",
+          fileUrl: row.file_url,
+        }));
+
+        setUploadedFiles(mapped);
+      } catch (err) {
+        console.error("Error fetching uploaded files:", err);
+      }
+    };
+
+    fetchFiles();
+  }, []);
+
   const handleDeleteFile = (fileId: string) => {
-    setUploadedFiles(prev => prev.filter(f => f.id !== fileId));
+    setUploadedFiles((prev) => prev.filter((f) => f.id !== fileId));
     toast({
       title: "File deleted",
       description: "File has been removed from your uploads",
@@ -85,7 +149,7 @@ const DataInput = () => {
   };
 
   const getFileIcon = (type: string) => {
-    if (type.includes('XLS') || type.includes('EXCEL')) {
+    if (type.includes("XLS") || type.includes("EXCEL")) {
       return <FileSpreadsheet className="h-8 w-8 text-green-600" />;
     }
     return <FileText className="h-8 w-8 text-blue-600" />;
@@ -93,9 +157,11 @@ const DataInput = () => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'ready':
+      case "uploaded":
         return <CheckCircle className="h-5 w-5 text-success" />;
-      case 'processing':
+      case "ready":
+        return <CheckCircle className="h-5 w-5 text-primary" />;
+      case "processing":
         return <AlertCircle className="h-5 w-5 text-warning animate-pulse" />;
       default:
         return <Upload className="h-5 w-5 text-muted-foreground" />;
@@ -112,7 +178,7 @@ const DataInput = () => {
       </div>
 
       <div className="space-y-6">
-        {/* Upload Section - Horizontal */}
+        {/* Upload Section */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2 text-sm font-bold">
@@ -120,7 +186,7 @@ const DataInput = () => {
               <span>Upload Files</span>
             </CardTitle>
             <CardDescription>
-              Supported formats: CSV, Excel, PDF, Word documents
+              Supported formats: CSV, Excel (XLSX/XLS)
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -140,18 +206,18 @@ const DataInput = () => {
                     id="file-upload"
                     type="file"
                     multiple
-                    accept=".csv,.xlsx,.xls,.pdf,.doc,.docx"
+                    accept=".csv,.xlsx,.xls"
                     onChange={handleFileUpload}
                     className="hidden"
                   />
                 </div>
               </div>
-              
+
               <div className="lg:col-span-1">
                 <div className="text-xs text-muted-foreground space-y-2">
                   <p>• Maximum file size: 10MB</p>
                   <p>• Supports multiple file upload</p>
-                  <p>• Data will be validated automatically</p>
+                  <p>• Files are stored in Supabase Storage</p>
                 </div>
               </div>
             </div>
@@ -175,7 +241,10 @@ const DataInput = () => {
             ) : (
               <div className="space-y-4">
                 {uploadedFiles.map((file) => (
-                  <div key={file.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+                  <div
+                    key={file.id}
+                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                  >
                     <div className="flex items-center space-x-4">
                       {getFileIcon(file.type)}
                       <div>
@@ -183,9 +252,19 @@ const DataInput = () => {
                         <p className="text-sm text-muted-foreground">
                           {file.type} • {file.size} • Uploaded {file.uploadDate}
                         </p>
+                        {file.fileUrl && (
+                          <a
+                            href={file.fileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-500 underline"
+                          >
+                            View File
+                          </a>
+                        )}
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center space-x-2">
                       {getStatusIcon(file.status)}
                       <Button variant="ghost" size="sm" title="Preview file">
@@ -197,8 +276,8 @@ const DataInput = () => {
                       <Button variant="ghost" size="sm" title="Download file">
                         <Download className="h-4 w-4" />
                       </Button>
-                      <Button 
-                        variant="ghost" 
+                      <Button
+                        variant="ghost"
                         size="sm"
                         title="Delete file"
                         onClick={() => handleDeleteFile(file.id)}
@@ -210,16 +289,17 @@ const DataInput = () => {
                 ))}
               </div>
             )}
-            
+
             {uploadedFiles.length > 0 && (
               <div className="mt-6 pt-6 border-t">
                 <div className="flex space-x-4">
-                  <Button className="bg-gradient-primary hover:opacity-90">
+                  <Button
+                    className="bg-gradient-primary hover:opacity-90"
+                    onClick={handleSaveChanges}
+                  >
                     Save Changes
                   </Button>
-                  <Button variant="outline">
-                    Download All Files
-                  </Button>
+                  <Button variant="outline">Download All Files</Button>
                 </div>
               </div>
             )}
