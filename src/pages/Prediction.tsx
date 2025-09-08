@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,11 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { 
-  Play, 
-  Calendar, 
-  MapPin, 
-  FileText, 
+import {
+  Play,
+  FileText,
   Download,
   MessageSquare,
   BarChart3,
@@ -20,184 +18,186 @@ import {
   Clock,
   Send,
   History,
-  X
+  Trash2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ModelRun {
   id: string;
-  dateRange: string;
+  run_id: string;
+  date_range: string;
   region: string;
-  status: 'in-progress' | 'success' | 'failed';
+  files?: string;
+  status: "in-progress" | "success" | "failed";
   progress: number;
-  createdAt: string;
+  created_at: string;
+  results_url?: string | null;
+}
+
+interface UploadedFile {
+  id: string;
+  filename: string;
 }
 
 const Prediction = () => {
+  const [availableFiles, setAvailableFiles] = useState<UploadedFile[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [region, setRegion] = useState("");
-  const [modelRuns, setModelRuns] = useState<ModelRun[]>([
-    {
-      id: 'run_001',
-      dateRange: '2024-01-01 to 2024-03-31',
-      region: 'North America',
-      status: 'success',
-      progress: 100,
-      createdAt: '2024-01-15 14:30'
-    },
-    {
-      id: 'run_002',
-      dateRange: '2024-04-01 to 2024-06-30',
-      region: 'Europe',
-      status: 'in-progress',
-      progress: 67,
-      createdAt: '2024-01-16 09:15'
-    }
-  ]);
-  const [selectedRun, setSelectedRun] = useState("");
+  const [modelRuns, setModelRuns] = useState<ModelRun[]>([]);
   const [chatMessage, setChatMessage] = useState("");
-  const [chatHistory, setChatHistory] = useState([
-    {
-      type: 'ai',
-      message: "Hello! I'm ModEx AI. I can help you understand your supply chain predictions and answer questions about model results. How can I assist you today?",
-      timestamp: '2024-01-16 09:00:00'
-    },
-    {
-      type: 'user',
-      message: 'What are the key factors driving the forecast for Widget A?',
-      timestamp: '2024-01-16 09:05:00'
-    },
-    {
-      type: 'ai',
-      message: 'Based on your selected model run, the key factors driving Widget A forecast include: 1) Seasonal demand patterns showing 15% increase in Q2, 2) Regional market expansion in North America, 3) Historical sales data indicating strong correlation with economic indicators. The model confidence level is 87%.',
-      timestamp: '2024-01-16 09:05:30'
-    },
-    {
-      type: 'user',
-      message: 'How accurate has this prediction model been historically?',
-      timestamp: '2024-01-16 09:10:00'
-    },
-    {
-      type: 'ai',
-      message: 'The model has shown strong historical performance with an average accuracy of 94.2% over the past 12 months. For Widget A specifically, the accuracy rate is 91.5%. The model performs best during stable market conditions and may have reduced accuracy during supply chain disruptions.',
-      timestamp: '2024-01-16 09:10:45'
-    },
-    {
-      type: 'user',
-      message: 'What risks should I consider for the upcoming quarter?',
-      timestamp: '2024-01-16 09:15:00'
-    },
-    {
-      type: 'ai',
-      message: 'Key risks for the upcoming quarter include: 1) Supply chain bottlenecks in raw material procurement, 2) Potential demand volatility due to economic uncertainty, 3) Seasonal inventory buildup requirements, 4) Transportation cost fluctuations. I recommend maintaining safety stock levels at 15% above normal and monitoring supplier lead times closely.',
-      timestamp: '2024-01-16 09:16:00'
-    }
-  ]);
-  const [chatSessions] = useState([
-    {
-      id: 'session_1',
-      name: 'Widget A Demand Forecast Analysis',
-      lastMessage: 'What are the key factors driving the forecast...',
-      timestamp: '2 hours ago'
-    },
-    {
-      id: 'session_2',
-      name: 'Model Accuracy Discussion',
-      lastMessage: 'How accurate has this prediction model...',
-      timestamp: '4 hours ago'
-    },
-    {
-      id: 'session_3',
-      name: 'Risk Assessment Q2 2024',
-      lastMessage: 'What risks should I consider for the...',
-      timestamp: '1 day ago'
-    },
-    {
-      id: 'session_4',
-      name: 'Seasonal Patterns Analysis',
-      lastMessage: 'Can you explain the seasonal trends...',
-      timestamp: '2 days ago'
-    },
-    {
-      id: 'session_5',
-      name: 'Supply Chain Disruption Impact',
-      lastMessage: 'How will the supplier delays affect...',
-      timestamp: '3 days ago'
-    }
-  ]);
+  const [chatHistory, setChatHistory] = useState<any[]>([]);
   const [showChatHistory, setShowChatHistory] = useState(false);
 
   const { toast } = useToast();
+  const userId = "test-user-123";
+  const runId = "";
 
-  const handleGeneratePredictions = () => {
-    if (!fromDate || !toDate || !region) {
+  const fetchFiles = async () => {
+    try {
+      const res = await fetch(
+        `http://127.0.0.1:8000/get-data?user_id=${userId}&run_id=run-001`
+      );
+      if (!res.ok) throw new Error("Failed to fetch files");
+      const data = await res.json();
+
+      const mapped: UploadedFile[] = (data.records || []).map((row: any) => ({
+        id: row.id?.toString() || row.filename,
+        filename: row.filename,
+      }));
+      setAvailableFiles(mapped);
+    } catch (err) {
+      console.error("Error fetching files:", err);
+    }
+  };
+
+  const fetchPredictions = async () => {
+    try {
+      const res = await fetch(
+        `http://127.0.0.1:8000/get-predictions?user_id=${userId}`
+      );
+      if (!res.ok) throw new Error("Failed to fetch predictions");
+      const data = await res.json();
+      setModelRuns(data.records || []);
+    } catch (err) {
+      console.error("Error fetching predictions:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchFiles();
+    fetchPredictions();
+    const interval = setInterval(fetchPredictions, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleGeneratePredictions = async () => {
+    if (!fromDate || !toDate || !region || selectedFiles.length === 0) {
       toast({
         title: "Missing Information",
-        description: "Please fill in all required fields",
-        variant: "destructive"
+        description: "Please fill in all fields and select at least one file.",
+        variant: "destructive",
       });
       return;
     }
 
-    const newRun: ModelRun = {
-      id: `run_${Date.now()}`,
-      dateRange: `${fromDate} to ${toDate}`,
-      region: region,
-      status: 'in-progress',
-      progress: 0,
-      createdAt: new Date().toLocaleString()
-    };
+    try {
+      const formData = new FormData();
+      formData.append("user_id", userId);
+      formData.append("run_id", runId);
+      formData.append("from_date", fromDate);
+      formData.append("to_date", toDate);
+      formData.append("region", region);
+      formData.append("files", selectedFiles.join(","));
 
-    setModelRuns(prev => [newRun, ...prev]);
+      const response = await fetch("http://127.0.0.1:8000/predict", {
+        method: "POST",
+        body: formData,
+      });
 
-    // Simulate model execution progress
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += Math.random() * 20;
-      if (progress >= 100) {
-        progress = 100;
-        setModelRuns(prev => 
-          prev.map(run => 
-            run.id === newRun.id 
-              ? { ...run, status: 'success', progress: 100 } 
-              : run
-          )
-        );
-        clearInterval(interval);
+      if (!response.ok) throw new Error("Prediction request failed");
+      const result = await response.json();
+
+      if (result.prediction) {
+        setModelRuns((prev) => [result.prediction, ...prev]);
         toast({
-          title: "Predictions Generated",
-          description: "Model execution completed successfully",
+          title: "Prediction Started",
+          description: "Your model run has been queued.",
         });
-      } else {
-        setModelRuns(prev => 
-          prev.map(run => 
-            run.id === newRun.id 
-              ? { ...run, progress } 
-              : run
-          )
-        );
       }
-    }, 1000);
+    } catch (err) {
+      console.error("Error creating prediction:", err);
+      toast({
+        title: "Prediction Failed",
+        description: "Could not create a new prediction run.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteRun = async (run_id: string) => {
+    try {
+      const res = await fetch(
+        `http://127.0.0.1:8000/delete-prediction?user_id=${userId}&run_id=${run_id}`,
+        { method: "DELETE" }
+      );
+      if (!res.ok) throw new Error("Failed to delete run");
+
+      setModelRuns((prev) => prev.filter((r) => r.run_id !== run_id));
+      toast({
+        title: "Deleted",
+        description: `Run ${run_id} has been deleted.`,
+      });
+    } catch (err) {
+      console.error("Error deleting run:", err);
+      toast({
+        title: "Delete Failed",
+        description: "Could not delete the run.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDownloadCSV = (run: ModelRun) => {
+    if (!run) return;
+    const headers = ["Run ID", "Date Range", "Region", "Files", "Status", "Progress"];
+    const row = [
+      run.run_id,
+      run.date_range,
+      run.region,
+      run.files || "",
+      run.status,
+      run.progress.toString(),
+    ];
+    const csvContent = [headers, row].map((e) => e.join(",")).join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${run.run_id}_results.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const handleSendMessage = () => {
     if (!chatMessage.trim()) return;
+    setChatHistory((prev) => [
+      ...prev,
+      { type: "user", message: chatMessage, timestamp: new Date().toISOString() },
+    ]);
 
-    setChatHistory(prev => [...prev, {
-      type: 'user',
-      message: chatMessage,
-      timestamp: new Date().toISOString()
-    }]);
-
-    // Simulate AI response
     setTimeout(() => {
-      setChatHistory(prev => [...prev, {
-        type: 'ai',
-        message: 'Based on your selected model run, I can see that the demand forecast shows a 15% increase in Q2. The model confidence level is 87%. Would you like me to explain the key factors driving this prediction?',
-        timestamp: new Date().toISOString()
-      }]);
+      setChatHistory((prev) => [
+        ...prev,
+        {
+          type: "ai",
+          message:
+            "Based on your selected model run, the demand forecast shows a 15% increase in Q2. Confidence: 87%.",
+          timestamp: new Date().toISOString(),
+        },
+      ]);
     }, 1500);
 
     setChatMessage("");
@@ -205,11 +205,11 @@ const Prediction = () => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'success':
+      case "success":
         return <CheckCircle className="h-5 w-5 text-success" />;
-      case 'failed':
+      case "failed":
         return <XCircle className="h-5 w-5 text-destructive" />;
-      case 'in-progress':
+      case "in-progress":
         return <Clock className="h-5 w-5 text-warning animate-pulse" />;
       default:
         return null;
@@ -218,7 +218,7 @@ const Prediction = () => {
 
   const sampleQuestions = [
     "What are the key factors driving the forecast?",
-    "How accurate is this prediction model?"
+    "How accurate is this prediction model?",
   ];
 
   return (
@@ -230,16 +230,14 @@ const Prediction = () => {
         </p>
       </div>
 
-      {/* Initiate Model Run - Full Width */}
+      {/* Generate Predictions Section */}
       <Card className="mb-6">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2 text-sm font-bold">
             <BarChart3 className="h-5 w-5" />
             <span>Generate Predictions</span>
           </CardTitle>
-          <CardDescription>
-            Set parameters for prediction generation
-          </CardDescription>
+          <CardDescription>Set parameters for prediction generation</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
@@ -278,48 +276,40 @@ const Prediction = () => {
               </Select>
             </div>
 
+            {/* Dynamic Input Files Section */}
             <div className="space-y-2">
               <Label>Input Files</Label>
               <div className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <input 
-                    type="checkbox" 
-                    id="demand-data" 
-                    className="rounded border-border"
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedFiles([...selectedFiles, "demand_data"]);
-                      } else {
-                        setSelectedFiles(selectedFiles.filter(f => f !== "demand_data"));
-                      }
-                    }}
-                  />
-                  <Label htmlFor="demand-data" className="text-xs cursor-pointer">
-                    demand_data_2024.csv
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <input 
-                    type="checkbox" 
-                    id="inventory-levels" 
-                    className="rounded border-border"
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedFiles([...selectedFiles, "inventory_levels"]);
-                      } else {
-                        setSelectedFiles(selectedFiles.filter(f => f !== "inventory_levels"));
-                      }
-                    }}
-                  />
-                  <Label htmlFor="inventory-levels" className="text-xs cursor-pointer">
-                    inventory_levels.xlsx
-                  </Label>
-                </div>
+                {availableFiles.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">No files uploaded yet.</p>
+                ) : (
+                  availableFiles.map((file) => (
+                    <div key={file.id} className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id={`file-${file.id}`}
+                        className="rounded border-border"
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedFiles([...selectedFiles, file.filename]);
+                          } else {
+                            setSelectedFiles(
+                              selectedFiles.filter((f) => f !== file.filename)
+                            );
+                          }
+                        }}
+                      />
+                      <Label htmlFor={`file-${file.id}`} className="text-xs cursor-pointer">
+                        {file.filename}
+                      </Label>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
 
             <div className="flex items-end">
-              <Button 
+              <Button
                 className="w-full bg-gradient-primary hover:opacity-90"
                 onClick={handleGeneratePredictions}
               >
@@ -331,9 +321,9 @@ const Prediction = () => {
         </CardContent>
       </Card>
 
-      {/* Bottom Section - ModEx AI and Model Runs Side by Side */}
+      {/* Chat + Model Runs */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* ModEx AI Chat Interface */}
+        {/* Chat */}
         <div className="lg:col-span-2">
           <Card className="h-[500px] flex flex-col overflow-hidden">
             <CardHeader className="border-b bg-gradient-primary text-white rounded-t-lg flex-shrink-0">
@@ -344,7 +334,11 @@ const Prediction = () => {
                 </div>
                 <Dialog open={showChatHistory} onOpenChange={setShowChatHistory}>
                   <DialogTrigger asChild>
-                    <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-white hover:bg-white/10"
+                    >
                       <History className="h-4 w-4" />
                     </Button>
                   </DialogTrigger>
@@ -356,18 +350,9 @@ const Prediction = () => {
                       </DialogTitle>
                     </DialogHeader>
                     <div className="overflow-y-auto flex-1 space-y-3 pr-2 max-h-[300px]">
-                      {chatSessions.map((session) => (
-                        <div
-                          key={session.id}
-                          className="p-3 border rounded-lg hover:bg-muted cursor-pointer transition-colors"
-                        >
-                          <h4 className="font-medium text-sm mb-1">{session.name}</h4>
-                          <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
-                            {session.lastMessage}
-                          </p>
-                          <span className="text-xs text-muted-foreground">{session.timestamp}</span>
-                        </div>
-                      ))}
+                      <p className="text-xs text-muted-foreground">
+                        (Future: load previous chats from backend)
+                      </p>
                     </div>
                   </DialogContent>
                 </Dialog>
@@ -376,42 +361,51 @@ const Prediction = () => {
                 Ask questions about your predictions and get intelligent insights
               </CardDescription>
             </CardHeader>
-            
+
             <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
-              {/* Chat Messages */}
+              {/* Messages */}
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {chatHistory.map((chat, index) => (
-                  <div key={index} className={`flex ${chat.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[80%] rounded-lg px-4 py-2 break-words ${
-                      chat.type === 'user' 
-                        ? 'bg-primary text-primary-foreground' 
-                        : 'bg-muted text-muted-foreground'
-                    }`}>
-                      <p className="text-sm whitespace-pre-wrap break-words">{chat.message}</p>
+                  <div
+                    key={index}
+                    className={`flex ${
+                      chat.type === "user" ? "justify-end" : "justify-start"
+                    }`}
+                  >
+                    <div
+                      className={`max-w-[80%] rounded-lg px-4 py-2 break-words ${
+                        chat.type === "user"
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-muted-foreground"
+                      }`}
+                    >
+                      <p className="text-sm whitespace-pre-wrap break-words">
+                        {chat.message}
+                      </p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Sample Questions */}
+              {/* Suggested Qs */}
               <div className="border-t p-3 bg-muted/50 flex-shrink-0">
                 <p className="text-sm font-medium mb-2">Suggested Questions:</p>
                 <div className="flex gap-2">
-                  {sampleQuestions.map((question, index) => (
+                  {sampleQuestions.map((q, i) => (
                     <Button
-                      key={index}
+                      key={i}
                       variant="outline"
                       size="sm"
                       className="text-xs h-auto py-2 px-3 text-left justify-start whitespace-normal flex-1"
-                      onClick={() => setChatMessage(question)}
+                      onClick={() => setChatMessage(q)}
                     >
-                      {question}
+                      {q}
                     </Button>
                   ))}
                 </div>
               </div>
 
-              {/* Chat Input */}
+              {/* Input */}
               <div className="border-t p-4 flex-shrink-0">
                 <div className="flex space-x-2">
                   <Textarea
@@ -432,37 +426,58 @@ const Prediction = () => {
 
         {/* Model Runs */}
         <div className="lg:col-span-1">
-          <Card className="h-[500px]">
+          <Card className="h-[500px] flex flex-col overflow-hidden">
             <CardHeader>
               <CardTitle className="text-sm font-bold">Model Runs</CardTitle>
               <CardDescription>Track prediction generation progress</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4 overflow-y-auto">
-              {modelRuns.map((run) => (
-                <div key={run.id} className="border rounded-lg p-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-medium text-sm">{run.id}</span>
-                    {getStatusIcon(run.status)}
+              {modelRuns.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No model runs yet.</p>
+              ) : (
+                modelRuns.map((run) => (
+                  <div key={run.id} className="border rounded-lg p-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-medium text-sm">{run.run_id}</span>
+                      {getStatusIcon(run.status)}
+                    </div>
+                    <p className="text-xs text-muted-foreground mb-2">
+                      {run.date_range}
+                    </p>
+                    <p className="text-xs text-muted-foreground mb-2">
+                      {run.region}
+                    </p>
+                    {run.files && (
+                      <p className="text-xs text-muted-foreground mb-2">
+                        Files: {run.files}
+                      </p>
+                    )}
+                    {run.status === "in-progress" && (
+                      <Progress value={run.progress} className="mb-2" />
+                    )}
+                    <div className="flex space-x-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled={run.status !== "success"}
+                        onClick={() => handleDownloadCSV(run)}
+                      >
+                        <Download className="h-3 w-3 mr-1" /> Download
+                      </Button>
+                      <Button variant="ghost" size="sm" disabled>
+                        <FileText className="h-3 w-3 mr-1" /> Details
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteRun(run.run_id)}
+                      >
+                        <Trash2 className="h-3 w-3 mr-1" /> Delete
+                      </Button>
+                    </div>
                   </div>
-                  <p className="text-xs text-muted-foreground mb-2">
-                    {run.dateRange}
-                  </p>
-                  <p className="text-xs text-muted-foreground mb-2">
-                    {run.region}
-                  </p>
-                  {run.status === 'in-progress' && (
-                    <Progress value={run.progress} className="mb-2" />
-                  )}
-                  <div className="flex space-x-2">
-                    <Button variant="ghost" size="sm">
-                      <Download className="h-3 w-3" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <FileText className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </CardContent>
           </Card>
         </div>
